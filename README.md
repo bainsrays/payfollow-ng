@@ -68,6 +68,7 @@ A Nigerian fashion seller has money stuck across multiple customers. PayFollow N
 - CSV export
 - WhatsApp Cloud API setup link
 - Local browser storage
+- Supabase starter schema for launch-ready auth/database work
 
 ## Safe Positioning
 
@@ -76,8 +77,24 @@ PayFollow NG is a payment organization and communication tool. It does not haras
 ## Next Product Steps
 
 - Replace demo login with real authentication
-- Add cloud database
+- Connect the app to Supabase auth and database
 - Add Paystack/Flutterwave payment links
 - Add deeper WhatsApp Business API integration
 - Add public marketing pages for FAQs, support, and terms
 - Add mobile-first production UI polish
+
+## Supabase Setup
+
+The first database schema is saved at:
+
+```text
+supabase/schema.sql
+```
+
+It creates:
+
+- business profiles
+- customer balances
+- staff/team members
+- payment history
+- Row Level Security policies
