@@ -1064,6 +1064,7 @@
             <div class="actions">
               <button class="btn primary" id="copyMessage" type="button">Copy message</button>
               <button class="btn warning" id="openWhatsApp" type="button">Open WhatsApp</button>
+              <button class="btn" id="sendWhatsappApi" type="button">Send via API</button>
               <button class="btn" id="markPaid" type="button">Mark paid</button>
               <button class="btn" id="markPart" type="button">Mark part-paid</button>
             </div>
@@ -1317,6 +1318,43 @@
 
     function activeBalance() {
       return balances.find(balance => balance.id === selectedId) || balances[0];
+    }
+
+    function normalizeWhatsAppNumber(value) {
+      let digits = String(value || "").replace(/\D/g, "");
+      if (digits.startsWith("00")) digits = digits.slice(2);
+      if (digits.startsWith("234")) return digits;
+      if (digits.startsWith("0")) return `234${digits.slice(1)}`;
+      if (digits.length === 10) return `234${digits}`;
+      return digits;
+    }
+
+    function whatsappUrl(balance) {
+      const message = document.getElementById("messageText").textContent;
+      const phone = normalizeWhatsAppNumber(balance?.phone);
+      const text = encodeURIComponent(message);
+      return phone ? `https://wa.me/${phone}?text=${text}` : `https://wa.me/?text=${text}`;
+    }
+
+    function applyLiveData(event) {
+      const detail = event.detail || {};
+      if (Array.isArray(detail.balances)) {
+        balances = detail.balances;
+        selectedId = balances.find(balance => balance.id === selectedId)?.id || balances[0]?.id;
+      }
+      if (detail.profile) {
+        profile = {
+          ...profile,
+          businessName: detail.profile.business_name || profile.businessName,
+          ownerName: detail.profile.owner_name || profile.ownerName,
+          businessType: detail.profile.business_type || profile.businessType,
+          businessPhone: detail.profile.business_phone || profile.businessPhone,
+          businessCity: detail.profile.business_city || profile.businessCity,
+          currency: detail.profile.currency || profile.currency,
+          created: true
+        };
+      }
+      render();
     }
 
     function render() {
@@ -1629,10 +1667,38 @@
     document.getElementById("openWhatsApp").addEventListener("click", () => {
       const balance = activeBalance();
       if (!balance) return;
-      const phone = balance.phone.replace(/\D/g, "");
-      const text = encodeURIComponent(document.getElementById("messageText").textContent);
-      const url = phone ? `https://wa.me/234${phone.replace(/^0/, "")}?text=${text}` : `https://wa.me/?text=${text}`;
-      window.open(url, "_blank", "noopener,noreferrer");
+      window.open(whatsappUrl(balance), "_blank", "noopener,noreferrer");
+    });
+    document.getElementById("sendWhatsappApi").addEventListener("click", async () => {
+      const balance = activeBalance();
+      if (!balance) return;
+      const phone = normalizeWhatsAppNumber(balance.phone);
+      if (!phone) {
+        showToast("Add customer WhatsApp number first");
+        return;
+      }
+      const config = window.PayFollowConfig || {};
+      if (!config.supabaseUrl || !config.supabaseAnonKey || !window.supabase) {
+        showToast("Supabase is required for API send");
+        return;
+      }
+      try {
+        const client = window.supabase.createClient(config.supabaseUrl, config.supabaseAnonKey);
+        const { error } = await client.functions.invoke("send-whatsapp", {
+          body: {
+            balanceId: balance.id,
+            customerName: balance.name,
+            phone,
+            message: document.getElementById("messageText").textContent,
+            businessName: profile.businessName,
+            tone: document.getElementById("tone").value
+          }
+        });
+        if (error) throw error;
+        showToast("WhatsApp API request sent");
+      } catch (error) {
+        showToast(error.message || "WhatsApp API not ready yet");
+      }
     });
     document.getElementById("markPaid").addEventListener("click", () => {
       const balance = activeBalance();
@@ -1693,6 +1759,7 @@
     });
 
     syncProfileForm();
+    window.addEventListener("payfollow:liveData", applyLiveData);
     render();
   </script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>

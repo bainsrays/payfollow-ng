@@ -60,6 +60,7 @@
   function mapBalance(row) {
     return {
       id: row.id,
+      businessId: row.business_id,
       name: row.customer_name,
       phone: row.customer_phone || "",
       amount: Number(row.amount || 0),
@@ -71,6 +72,17 @@
       note: row.note || "",
       paidThisWeek: 0
     };
+  }
+
+  function publishLiveData(profile = null) {
+    window.dispatchEvent(new CustomEvent("payfollow:liveData", {
+      detail: {
+        businessId: state.businessId,
+        profile,
+        balances: state.liveBalances,
+        staff: state.liveStaff
+      }
+    }));
   }
 
   function renderLiveBalances() {
@@ -107,6 +119,7 @@
     text("totalOverdue", money(overdueTotal, input("currency")?.value || "NGN"));
     text("dueToday", String(dueToday.length));
     text("report", `${input("businessName")?.value || "This business"} has ${money(total, input("currency")?.value || "NGN")} still unpaid across ${open.length} customers. ${overdue.length} balances are overdue and ${dueToday.length} need follow-up today.`);
+    publishLiveData();
   }
 
   function renderLiveStaff() {
@@ -169,6 +182,7 @@
     ]);
     state.liveBalances = (balances || []).map(mapBalance);
     state.liveStaff = staff || [];
+    publishLiveData(liveProfile);
     renderLiveBalances();
     renderLiveStaff();
   }

@@ -72,11 +72,27 @@ create table if not exists public.activity_logs (
   created_at timestamptz not null default now()
 );
 
+create table if not exists public.whatsapp_reminders (
+  id uuid primary key default gen_random_uuid(),
+  business_id uuid not null references public.business_profiles(id) on delete cascade,
+  balance_id uuid references public.customer_balances(id) on delete set null,
+  sent_by uuid not null default auth.uid() references auth.users(id) on delete cascade,
+  customer_name text not null,
+  customer_phone text not null,
+  message text not null,
+  delivery_mode text not null default 'click_to_chat' check (delivery_mode in ('click_to_chat', 'text', 'template')),
+  provider_message_id text,
+  status text not null default 'sent' check (status in ('queued', 'sent', 'failed')),
+  provider_response jsonb,
+  created_at timestamptz not null default now()
+);
+
 alter table public.business_profiles enable row level security;
 alter table public.customer_balances enable row level security;
 alter table public.staff_members enable row level security;
 alter table public.payment_history enable row level security;
 alter table public.activity_logs enable row level security;
+alter table public.whatsapp_reminders enable row level security;
 
 drop policy if exists "Owners can manage their business profiles" on public.business_profiles;
 create policy "Owners can manage their business profiles"
@@ -174,6 +190,27 @@ with check (
   )
 );
 
+drop policy if exists "Owners can manage WhatsApp reminders for their businesses" on public.whatsapp_reminders;
+create policy "Owners can manage WhatsApp reminders for their businesses"
+on public.whatsapp_reminders
+for all
+using (
+  exists (
+    select 1
+    from public.business_profiles bp
+    where bp.id = whatsapp_reminders.business_id
+      and bp.owner_id = auth.uid()
+  )
+)
+with check (
+  exists (
+    select 1
+    from public.business_profiles bp
+    where bp.id = whatsapp_reminders.business_id
+      and bp.owner_id = auth.uid()
+  )
+);
+
 create or replace function public.set_updated_at()
 returns trigger
 language plpgsql
@@ -206,6 +243,9 @@ create index if not exists customer_balances_due_date_idx on public.customer_bal
 create index if not exists staff_members_business_id_idx on public.staff_members(business_id);
 create index if not exists payment_history_business_id_idx on public.payment_history(business_id);
 create index if not exists activity_logs_business_id_idx on public.activity_logs(business_id);
+create index if not exists whatsapp_reminders_business_id_idx on public.whatsapp_reminders(business_id);
+create index if not exists whatsapp_reminders_balance_id_idx on public.whatsapp_reminders(balance_id);
+create index if not exists whatsapp_reminders_created_at_idx on public.whatsapp_reminders(created_at);
 
 grant usage on schema public to anon, authenticated;
 grant select on public.business_profiles to anon;
@@ -218,3 +258,4 @@ grant select, insert, update, delete on public.customer_balances to authenticate
 grant select, insert, update, delete on public.staff_members to authenticated;
 grant select, insert, update, delete on public.payment_history to authenticated;
 grant select, insert on public.activity_logs to authenticated;
+grant select, insert, update on public.whatsapp_reminders to authenticated;

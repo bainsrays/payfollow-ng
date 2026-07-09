@@ -66,7 +66,8 @@ A Nigerian fashion seller has money stuck across multiple customers. PayFollow N
 - Cashflow summary report
 - Downloadable text report
 - CSV export
-- WhatsApp Cloud API setup link
+- WhatsApp click-to-chat reminders with Nigerian phone number formatting
+- Supabase Edge Function source for WhatsApp Cloud API sending
 - Local browser fallback while Supabase keys are being configured
 - Supabase schema for launch-ready auth/database work
 
@@ -79,7 +80,7 @@ PayFollow NG is a payment organization and communication tool. It does not haras
 - Paste the Supabase anon key into `supabase-config.js`
 - Run `supabase/schema.sql` in Supabase SQL editor
 - Add Paystack/Flutterwave payment links
-- Add deeper WhatsApp Business API integration
+- Deploy and configure the WhatsApp Cloud API Edge Function
 - Add public marketing pages for FAQs, support, and terms
 - Add mobile-first production UI polish
 
@@ -98,3 +99,35 @@ It creates:
 - staff/team members
 - payment history
 - Row Level Security policies
+
+## WhatsApp Cloud API Setup
+
+The dashboard works immediately with WhatsApp click-to-chat links. For automatic API sending, deploy the Supabase Edge Function at:
+
+```text
+supabase/functions/send-whatsapp/index.ts
+```
+
+Required Supabase secrets:
+
+```text
+META_WHATSAPP_TOKEN=Meta permanent or system-user access token
+META_WHATSAPP_PHONE_NUMBER_ID=WhatsApp Cloud API phone number ID
+META_WHATSAPP_API_VERSION=v20.0
+```
+
+Optional template mode:
+
+```text
+WHATSAPP_TEMPLATE_NAME=payment_reminder_v1
+WHATSAPP_TEMPLATE_LANGUAGE=en
+```
+
+Deploy with the Supabase CLI:
+
+```text
+npx supabase functions deploy send-whatsapp --project-ref ngbryxkutijvmujnmija
+npx supabase secrets set META_WHATSAPP_TOKEN=... META_WHATSAPP_PHONE_NUMBER_ID=... META_WHATSAPP_API_VERSION=v20.0 --project-ref ngbryxkutijvmujnmija
+```
+
+Meta usually requires approved templates for business-initiated reminders outside the 24-hour customer-service window. Use click-to-chat for immediate launch, then switch the function to an approved template for production API sends.
