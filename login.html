@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
-  <title>Create Account or Login | PayFollow NG</title>
+  <title>Create Account or Login | PayFollow NG by Dynamic Fix LLC</title>
   <meta name="description" content="Create a PayFollow NG account or sign in to manage customer balances, WhatsApp payment reminders, staff access, and cashflow reports." />
   <meta name="robots" content="noindex, follow" />
   <link rel="canonical" href="https://payfollowng.com/login.html" />
@@ -780,7 +780,7 @@
         <a href="index.html">Home</a>
         <a href="features.html">Features</a>
         <a href="pricing.html">Pricing</a>
-        <a href="app.html">Demo</a>
+        <a href="app.html">Dashboard</a>
         <a href="contact.html">Contact</a>
         <details class="nav-auth">
           <summary>Login</summary>
@@ -798,8 +798,8 @@
   </nav>
   <section class="site-section">
     <div class="section-inner section-head">
-      <h1 id="loginTitle">Create your PayFollow NG demo account.</h1>
-      <p id="loginIntro">Set up the business owner account and business profile before entering the live dashboard.</p>
+      <h1 id="loginTitle">Create your PayFollow NG account.</h1>
+      <p id="loginIntro">Set up a real business workspace operated by Dynamic Fix LLC, a registered Nigerian company.</p>
     </div>
     <div class="section-inner">
       <article class="price-plan" style="max-width: 760px; margin: 0 auto;">
@@ -811,21 +811,21 @@
           <div class="split">
             <label>
               Account email
-              <input id="loginEmail" type="email" value="owner@payfollow.ng" required />
+              <input id="loginEmail" type="email" placeholder="you@business.com" required />
             </label>
             <label>
               Password
-              <input id="loginPassword" type="password" value="demo1234" required />
+              <input id="loginPassword" type="password" placeholder="Create a secure password" required />
             </label>
           </div>
           <div class="split business-fields">
             <label>
               Business name
-              <input id="loginBusinessName" type="text" value="Ada's Fashion House" required />
+              <input id="loginBusinessName" type="text" value="Dynamic Fix LLC" required />
             </label>
             <label>
               Owner name
-              <input id="loginOwnerName" type="text" value="Ada Okafor" required />
+              <input id="loginOwnerName" type="text" placeholder="Owner or manager name" required />
             </label>
           </div>
           <div class="split business-fields">
@@ -862,9 +862,9 @@
           </div>
           <div class="actions">
             <button class="btn primary" id="loginSubmit" type="submit">Create account and open dashboard</button>
-            <button class="btn" id="loadLoginSample" type="button">Load sample account</button>
+            <button class="btn" id="loadLoginSample" type="button">Use sample workspace</button>
           </div>
-          <p class="fine-print" id="loginStatus">Demo auth only: saved in this browser for the hackathon MVP.</p>
+          <p class="fine-print" id="loginStatus">Live account access is ready for Supabase connection.</p>
         </form>
       </article>
     </div>
@@ -935,8 +935,8 @@
         ? "Login and open dashboard"
         : "Create account and open dashboard";
       document.getElementById("loginStatus").textContent = isSignin
-        ? "Demo login only: this checks/saves details in this browser for the hackathon MVP."
-        : "Demo auth only: saved in this browser for the hackathon MVP.";
+        ? "Login fallback: this saves details in this browser until Supabase is activated."
+        : "Account fallback: this saves details in this browser until Supabase is activated.";
     }
 
     document.getElementById("createMode").addEventListener("click", () => setAccountMode("create"));
@@ -959,6 +959,9 @@
 
     setAccountMode(accountMode);
   </script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="login-live.js"></script>
 </body>
 </html>
 

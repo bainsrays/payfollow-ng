@@ -4,8 +4,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
-  <title>Live Demo Dashboard | PayFollow NG</title>
-  <meta name="description" content="Try the PayFollow NG dashboard demo for tracking unpaid balances, overdue payments, part payments, WhatsApp reminders, and cashflow reports." />
+  <title>Business Dashboard | PayFollow NG by Dynamic Fix LLC</title>
+  <meta name="description" content="Use the PayFollow NG business dashboard by Dynamic Fix LLC to track unpaid balances, overdue payments, part payments, WhatsApp reminders, and cashflow reports." />
   <meta name="robots" content="noindex, follow" />
   <link rel="canonical" href="https://payfollowng.com/app.html" />
   <style>
@@ -780,7 +780,7 @@
         <a href="index.html">Home</a>
         <a href="features.html">Features</a>
         <a href="pricing.html">Pricing</a>
-        <a href="app.html">Demo</a>
+        <a href="app.html">Dashboard</a>
         <a href="contact.html">Contact</a>
         <details class="nav-auth">
           <summary>Login</summary>
@@ -799,8 +799,8 @@
 <section class="demo-shell" id="demo">
     <div class="section-inner">
       <div class="section-head">
-        <h2>Live product demo</h2>
-        <p>Open the login page to create a demo account, then use this app page to manage profiles, balances, staff, reminders, and reports.</p>
+        <h2>Business dashboard</h2>
+        <p>Create an account, set up a business profile, and manage balances, staff, WhatsApp reminders, and reports from one workspace.</p>
       </div>
     </div>
   <main class="shell">
@@ -815,7 +815,7 @@
         <p>Track who owes, what they promised, and send polite WhatsApp-ready reminders from one clean dashboard.</p>
       </div>
       <div class="sidebar-note">
-        <span>Hackathon MVP: dashboard + customer balance tracker + AI-style message generator.</span>
+        <span>Operated by Dynamic Fix LLC, a registered Nigerian company.</span>
         <span>Safe positioning: polite payment organization, not debt harassment.</span>
       </div>
     </aside>
@@ -824,17 +824,17 @@
       <header class="topbar">
         <div>
           <h2 id="workspaceTitle">Ada's Fashion House Payment Desk</h2>
-          <p id="workspaceSubtitle">Demo business profile for a Nigerian SME managing credit sales, part payments, and customer follow-ups.</p>
+          <p id="workspaceSubtitle">Business profile for a Nigerian SME managing credit sales, part payments, and customer follow-ups.</p>
         </div>
-        <span class="badge">Group 73 Hackathon MVP</span>
+        <span class="badge">Dynamic Fix LLC workspace</span>
       </header>
 
       <section class="panel">
         <div class="toolbar">
           <h3 style="margin: 0">Business profile setup</h3>
-          <span class="status" id="accountStatus">Demo account</span>
+          <span class="status" id="accountStatus">Checking account</span>
         </div>
-        <p class="fine-print">Need to create or sign in to a demo account? Use the dedicated login page first.</p>
+        <p class="fine-print">Need to create or sign in to an account? Use the dedicated login page first.</p>
         <div class="actions" style="margin-bottom: 14px">
           <a class="btn" href="login.html">Open login page</a>
         </div>
@@ -893,9 +893,9 @@
             </label>
           </div>
           <div class="actions">
-            <button class="btn primary" type="submit">Create demo account</button>
+            <button class="btn primary" type="submit">Save live workspace</button>
             <button class="btn" id="saveBusinessProfile" type="button">Save business profile</button>
-            <button class="btn" id="loadSampleAccount" type="button">Load sample account</button>
+            <button class="btn" id="loadSampleAccount" type="button">Load sample workspace</button>
           </div>
         </form>
         <div class="link-row">
@@ -1283,7 +1283,7 @@
       document.getElementById("workspaceSubtitle").textContent =
         `${profile.ownerName} • ${profile.businessType} • ${profile.businessCity} • ${profile.businessPhone}`;
       const accountStatus = document.getElementById("accountStatus");
-      accountStatus.textContent = account.loggedIn ? "Logged in" : profile.created ? "Account set up" : "Demo account";
+      accountStatus.textContent = account.loggedIn ? "Logged in" : profile.created ? "Account set up" : "Account setup";
       accountStatus.className = `status ${account.loggedIn ? "" : "part"}`;
       renderProfileSelector();
       renderStaff();
@@ -1547,7 +1547,7 @@
       };
       saveAccount();
       render();
-      showToast("Demo account created");
+      showToast("Account created");
     });
 
     document.getElementById("loginAccount").addEventListener("click", () => {
@@ -1565,7 +1565,7 @@
       event.preventDefault();
       upsertBusinessProfile(makeProfileFromForm());
       render();
-      showToast("Demo account created");
+      showToast("Account created");
     });
 
     document.getElementById("saveBusinessProfile").addEventListener("click", () => {
@@ -1655,7 +1655,7 @@
     });
     document.getElementById("saveData").addEventListener("click", () => {
       saveBalances();
-      showToast("Demo data saved");
+      showToast("Data saved");
     });
     document.getElementById("exportReport").addEventListener("click", () => {
       copyText(document.getElementById("report").textContent, "Report copied");
@@ -1689,12 +1689,15 @@
       selectedId = balances[0].id;
       syncProfileForm();
       render();
-      showToast("Demo reset");
+      showToast("Workspace reset");
     });
 
     syncProfileForm();
     render();
   </script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="app-live.js"></script>
 
 </body>
 </html>

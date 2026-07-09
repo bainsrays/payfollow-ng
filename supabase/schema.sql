@@ -1,5 +1,6 @@
 -- PayFollow NG initial Supabase schema
 -- Run this in the Supabase SQL editor after creating the project.
+-- Product owner/operator: Dynamic Fix LLC, Nigeria
 
 create extension if not exists "pgcrypto";
 
@@ -7,6 +8,8 @@ create table if not exists public.business_profiles (
   id uuid primary key default gen_random_uuid(),
   owner_id uuid not null default auth.uid() references auth.users(id) on delete cascade,
   business_name text not null,
+  legal_owner_name text not null default 'Dynamic Fix LLC',
+  legal_owner_country text not null default 'Nigeria',
   owner_name text,
   business_type text,
   business_phone text,
@@ -58,10 +61,22 @@ create table if not exists public.payment_history (
   created_at timestamptz not null default now()
 );
 
+create table if not exists public.activity_logs (
+  id uuid primary key default gen_random_uuid(),
+  business_id uuid not null references public.business_profiles(id) on delete cascade,
+  actor_id uuid not null default auth.uid() references auth.users(id) on delete cascade,
+  action text not null,
+  entity_type text,
+  entity_id uuid,
+  note text,
+  created_at timestamptz not null default now()
+);
+
 alter table public.business_profiles enable row level security;
 alter table public.customer_balances enable row level security;
 alter table public.staff_members enable row level security;
 alter table public.payment_history enable row level security;
+alter table public.activity_logs enable row level security;
 
 create policy "Owners can manage their business profiles"
 on public.business_profiles
@@ -129,6 +144,30 @@ with check (
   )
 );
 
+create policy "Owners can read activity logs for their businesses"
+on public.activity_logs
+for select
+using (
+  exists (
+    select 1
+    from public.business_profiles bp
+    where bp.id = activity_logs.business_id
+      and bp.owner_id = auth.uid()
+  )
+);
+
+create policy "Owners can add activity logs for their businesses"
+on public.activity_logs
+for insert
+with check (
+  exists (
+    select 1
+    from public.business_profiles bp
+    where bp.id = activity_logs.business_id
+      and bp.owner_id = auth.uid()
+  )
+);
+
 create or replace function public.set_updated_at()
 returns trigger
 language plpgsql
@@ -153,3 +192,11 @@ drop trigger if exists set_staff_members_updated_at on public.staff_members;
 create trigger set_staff_members_updated_at
 before update on public.staff_members
 for each row execute function public.set_updated_at();
+
+create index if not exists business_profiles_owner_id_idx on public.business_profiles(owner_id);
+create index if not exists customer_balances_business_id_idx on public.customer_balances(business_id);
+create index if not exists customer_balances_status_idx on public.customer_balances(status);
+create index if not exists customer_balances_due_date_idx on public.customer_balances(due_date);
+create index if not exists staff_members_business_id_idx on public.staff_members(business_id);
+create index if not exists payment_history_business_id_idx on public.payment_history(business_id);
+create index if not exists activity_logs_business_id_idx on public.activity_logs(business_id);

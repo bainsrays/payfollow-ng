@@ -1,6 +1,6 @@
 # PayFollow NG
 
-PayFollow NG is a payment follow-up website and dashboard for Nigerian small businesses that sell on credit or collect balances later.
+PayFollow NG is a payment follow-up website and dashboard for Nigerian small businesses that sell on credit or collect balances later. It is operated by Dynamic Fix LLC, a registered company in Nigeria.
 
 It helps business owners:
 
@@ -11,9 +11,9 @@ It helps business owners:
 - Copy simple cashflow reports
 - Explain the product through a landing page, navigation, feature sections, and pricing teaser
 
-## Hackathon MVP
+## Product Status
 
-This is a self-contained static MVP built for the Outskill hackathon.
+This is a static GitHub Pages product front end with Supabase-ready account and database wiring.
 
 GitHub repository:
 
@@ -21,10 +21,10 @@ GitHub repository:
 https://github.com/bainsrays/payfollow-ng
 ```
 
-Public demo:
+Public website:
 
 ```text
-https://bainsrays.github.io/payfollow-ng/
+https://payfollowng.com/
 ```
 
 Open locally:
@@ -39,7 +39,7 @@ Or open:
 index.html
 ```
 
-## Demo Story
+## Product Story
 
 A Nigerian fashion seller has money stuck across multiple customers. PayFollow NG shows who owes, what is overdue, who needs follow-up today, and generates respectful WhatsApp messages to help recover balances faster.
 
@@ -47,16 +47,16 @@ A Nigerian fashion seller has money stuck across multiple customers. PayFollow N
 
 - Product landing page
 - Sticky website navigation across multiple pages
-- Separate pages for Home, Features, Pricing, Contact, Login, and App/Demo
+- Separate pages for Home, Features, Pricing, Contact, Login, and Dashboard
 - Feature and pricing pages
-- Dedicated login/create-account demo page
-- Live dashboard demo page
-- Demo business account setup
-- Demo create account and login flow
+- Dedicated login/create-account page
+- Live dashboard page
+- Business account setup
+- Supabase-ready create account and login flow
 - Multiple business profiles
 - Team/staff access management
 - Dashboard metrics
-- Demo Nigerian SME customer balances
+- Sample Nigerian SME customer balances
 - Add customer balance form
 - Payment status tracking
 - Reminder tone selector
@@ -67,8 +67,8 @@ A Nigerian fashion seller has money stuck across multiple customers. PayFollow N
 - Downloadable text report
 - CSV export
 - WhatsApp Cloud API setup link
-- Local browser storage
-- Supabase starter schema for launch-ready auth/database work
+- Local browser fallback while Supabase keys are being configured
+- Supabase schema for launch-ready auth/database work
 
 ## Safe Positioning
 
@@ -76,8 +76,8 @@ PayFollow NG is a payment organization and communication tool. It does not haras
 
 ## Next Product Steps
 
-- Replace demo login with real authentication
-- Connect the app to Supabase auth and database
+- Paste the Supabase anon key into `supabase-config.js`
+- Run `supabase/schema.sql` in Supabase SQL editor
 - Add Paystack/Flutterwave payment links
 - Add deeper WhatsApp Business API integration
 - Add public marketing pages for FAQs, support, and terms
