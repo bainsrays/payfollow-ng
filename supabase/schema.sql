@@ -253,6 +253,7 @@ grant select on public.customer_balances to anon;
 grant select on public.staff_members to anon;
 grant select on public.payment_history to anon;
 grant select on public.activity_logs to anon;
+grant select on public.whatsapp_reminders to anon;
 grant select, insert, update, delete on public.business_profiles to authenticated;
 grant select, insert, update, delete on public.customer_balances to authenticated;
 grant select, insert, update, delete on public.staff_members to authenticated;
