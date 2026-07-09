@@ -1,0 +1,866 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PayFollow NG - Payment Follow-Up Dashboard</title>
+  <style>
+    :root {
+      --ink: #17211d;
+      --muted: #66736d;
+      --line: #dce5df;
+      --paper: #f7faf7;
+      --panel: #ffffff;
+      --soft: #edf5ef;
+      --accent: #126c4a;
+      --accent-2: #df8f2d;
+      --danger: #b93a32;
+      --blue: #285f9d;
+      --shadow: 0 20px 50px rgba(23, 33, 29, .08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+      letter-spacing: 0;
+    }
+
+    button, input, select, textarea { font: inherit; }
+
+    .shell {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 280px minmax(0, 1fr);
+    }
+
+    .sidebar {
+      min-height: 100vh;
+      padding: 24px;
+      color: #fff;
+      background:
+        linear-gradient(rgba(11, 50, 35, .86), rgba(11, 50, 35, .92)),
+        url("https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=900&q=80") center/cover;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 28px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 20px;
+      font-weight: 850;
+    }
+
+    .mark {
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      background: rgba(255,255,255,.14);
+      border: 1px solid rgba(255,255,255,.25);
+      font-size: 14px;
+    }
+
+    .sidebar h1 {
+      margin: 0;
+      max-width: 220px;
+      font-size: 38px;
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .sidebar p {
+      margin: 14px 0 0;
+      max-width: 220px;
+      color: rgba(255,255,255,.82);
+      line-height: 1.55;
+    }
+
+    .sidebar-note {
+      display: grid;
+      gap: 8px;
+      color: rgba(255,255,255,.78);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .workspace {
+      padding: 24px;
+      display: grid;
+      gap: 20px;
+      align-content: start;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    .topbar h2 {
+      margin: 0;
+      font-size: 24px;
+      line-height: 1.2;
+    }
+
+    .topbar p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .badge {
+      white-space: nowrap;
+      border: 1px solid rgba(18,108,74,.2);
+      color: var(--accent);
+      background: rgba(18,108,74,.08);
+      border-radius: 999px;
+      padding: 8px 10px;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .metric,
+    .panel,
+    .customer-row,
+    .message-box {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 8px;
+    }
+
+    .metric {
+      padding: 16px;
+      min-height: 94px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .metric span {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .metric strong {
+      font-size: 24px;
+      line-height: 1;
+    }
+
+    .metric small {
+      color: var(--muted);
+      line-height: 1.35;
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: minmax(320px, 420px) minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .panel {
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .panel h3 {
+      margin: 0 0 12px;
+      font-size: 17px;
+    }
+
+    .form {
+      display: grid;
+      gap: 12px;
+    }
+
+    label {
+      display: grid;
+      gap: 7px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 11px 12px;
+      color: var(--ink);
+      background: #fff;
+      outline-color: rgba(18,108,74,.35);
+    }
+
+    textarea {
+      min-height: 82px;
+      resize: vertical;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 11px 13px;
+      background: #fff;
+      color: var(--ink);
+      font-weight: 850;
+      cursor: pointer;
+    }
+
+    .btn.primary {
+      border-color: var(--accent);
+      color: #fff;
+      background: var(--accent);
+    }
+
+    .btn.warning {
+      border-color: rgba(223,143,45,.3);
+      color: #5c3510;
+      background: rgba(223,143,45,.12);
+    }
+
+    .btn:active { transform: translateY(1px); }
+
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .toolbar select {
+      max-width: 180px;
+    }
+
+    .customer-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .customer-row {
+      padding: 14px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      cursor: pointer;
+    }
+
+    .customer-row.active {
+      border-color: rgba(18,108,74,.5);
+      background: rgba(18,108,74,.05);
+    }
+
+    .customer-row h4 {
+      margin: 0 0 5px;
+      font-size: 15px;
+    }
+
+    .customer-row p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.35;
+      font-size: 13px;
+    }
+
+    .amount {
+      text-align: right;
+      display: grid;
+      align-content: start;
+      gap: 7px;
+      font-weight: 850;
+    }
+
+    .status {
+      justify-self: end;
+      width: max-content;
+      border-radius: 999px;
+      padding: 5px 8px;
+      font-size: 11px;
+      font-weight: 850;
+      color: var(--accent);
+      background: rgba(18,108,74,.1);
+    }
+
+    .status.overdue {
+      color: var(--danger);
+      background: rgba(185,58,50,.1);
+    }
+
+    .status.part {
+      color: var(--blue);
+      background: rgba(40,95,157,.1);
+    }
+
+    .status.paid {
+      color: var(--muted);
+      background: var(--soft);
+    }
+
+    .message-box {
+      padding: 16px;
+      min-height: 180px;
+      display: grid;
+      gap: 14px;
+      align-content: start;
+    }
+
+    .message-text {
+      white-space: pre-wrap;
+      color: var(--ink);
+      line-height: 1.55;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+      min-height: 124px;
+    }
+
+    .report {
+      margin-top: 14px;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 14px;
+    }
+
+    .toast {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      background: var(--ink);
+      color: #fff;
+      border-radius: 8px;
+      padding: 11px 13px;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: .2s ease;
+      pointer-events: none;
+      font-weight: 800;
+      font-size: 13px;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 1080px) {
+      .shell { grid-template-columns: 1fr; }
+      .sidebar {
+        min-height: 360px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        align-items: end;
+      }
+      .sidebar-note { justify-self: end; }
+    }
+
+    @media (max-width: 860px) {
+      .metrics,
+      .main-grid { grid-template-columns: 1fr; }
+      .sidebar { grid-template-columns: 1fr; }
+      .sidebar-note { justify-self: start; }
+    }
+
+    @media (max-width: 560px) {
+      .workspace, .sidebar { padding: 18px; }
+      .topbar { flex-direction: column; }
+      .badge { white-space: normal; }
+      .split { grid-template-columns: 1fr; }
+      .customer-row { grid-template-columns: 1fr; }
+      .amount { text-align: left; }
+      .status { justify-self: start; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <aside class="sidebar">
+      <div>
+        <div class="brand">
+          <div class="mark">PF</div>
+          PayFollow NG
+        </div>
+        <div style="height: 72px"></div>
+        <h1>Recover balances without chasing blindly.</h1>
+        <p>Track who owes, what they promised, and send polite WhatsApp-ready reminders from one clean dashboard.</p>
+      </div>
+      <div class="sidebar-note">
+        <span>Hackathon MVP: dashboard + customer balance tracker + AI-style message generator.</span>
+        <span>Safe positioning: polite payment organization, not debt harassment.</span>
+      </div>
+    </aside>
+
+    <section class="workspace">
+      <header class="topbar">
+        <div>
+          <h2>Ada's Fashion House Payment Desk</h2>
+          <p>Demo business profile for a Nigerian SME managing credit sales, part payments, and customer follow-ups.</p>
+        </div>
+        <span class="badge">Group 73 Hackathon MVP</span>
+      </header>
+
+      <section class="metrics">
+        <div class="metric">
+          <span>Total unpaid</span>
+          <strong id="totalUnpaid">NGN 0</strong>
+          <small>Open customer balances</small>
+        </div>
+        <div class="metric">
+          <span>Overdue</span>
+          <strong id="totalOverdue">NGN 0</strong>
+          <small>Needs follow-up now</small>
+        </div>
+        <div class="metric">
+          <span>Due today</span>
+          <strong id="dueToday">0</strong>
+          <small>Customers to message</small>
+        </div>
+        <div class="metric">
+          <span>Paid this week</span>
+          <strong id="paidWeek">NGN 0</strong>
+          <small>Recovered cashflow</small>
+        </div>
+      </section>
+
+      <section class="main-grid">
+        <section class="panel">
+          <h3>Add customer balance</h3>
+          <form class="form" id="balanceForm">
+            <div class="split">
+              <label>
+                Customer name
+                <input id="customerName" value="Tolu Martins" />
+              </label>
+              <label>
+                Phone
+                <input id="phone" value="08031234567" />
+              </label>
+            </div>
+            <div class="split">
+              <label>
+                Amount owed
+                <input id="amount" type="number" value="45000" min="0" />
+              </label>
+              <label>
+                Due date
+                <input id="dueDate" type="date" />
+              </label>
+            </div>
+            <label>
+              Item or service
+              <input id="item" value="Two custom dresses" />
+            </label>
+            <div class="split">
+              <label>
+                Status
+                <select id="status">
+                  <option value="unpaid">Unpaid</option>
+                  <option value="part">Part paid</option>
+                  <option value="overdue">Overdue</option>
+                  <option value="paid">Paid</option>
+                </select>
+              </label>
+              <label>
+                Customer tag
+                <select id="tag">
+                  <option>First follow-up</option>
+                  <option>Delays often</option>
+                  <option>Part-payment customer</option>
+                  <option>Pays on time</option>
+                </select>
+              </label>
+            </div>
+            <label>
+              Note or promise
+              <textarea id="note">Customer promised to complete payment after salary hits.</textarea>
+            </label>
+            <div class="actions">
+              <button class="btn primary" type="submit">Add balance</button>
+              <button class="btn" type="button" id="saveData">Save demo data</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="panel">
+          <div class="toolbar">
+            <h3 style="margin: 0">Customer balances</h3>
+            <select id="filter">
+              <option value="all">All statuses</option>
+              <option value="unpaid">Unpaid</option>
+              <option value="part">Part paid</option>
+              <option value="overdue">Overdue</option>
+              <option value="paid">Paid</option>
+            </select>
+          </div>
+          <div class="customer-list" id="customerList"></div>
+        </section>
+      </section>
+
+      <section class="main-grid">
+        <section class="panel">
+          <div class="toolbar">
+            <h3 style="margin: 0">Reminder generator</h3>
+            <select id="tone">
+              <option value="polite">Polite reminder</option>
+              <option value="firm">Firm reminder</option>
+              <option value="final">Final reminder</option>
+              <option value="part">Part-payment follow-up</option>
+              <option value="thanks">Thank-you after payment</option>
+            </select>
+          </div>
+          <div class="message-box">
+            <div class="message-text" id="messageText"></div>
+            <div class="actions">
+              <button class="btn primary" id="copyMessage" type="button">Copy message</button>
+              <button class="btn warning" id="openWhatsApp" type="button">Open WhatsApp</button>
+              <button class="btn" id="markPaid" type="button">Mark paid</button>
+              <button class="btn" id="markPart" type="button">Mark part-paid</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <h3>Cashflow report</h3>
+          <div class="report" id="report"></div>
+          <div class="actions" style="margin-top: 16px">
+            <button class="btn" id="exportReport" type="button">Copy report</button>
+            <button class="btn" id="resetDemo" type="button">Reset demo</button>
+          </div>
+        </section>
+      </section>
+    </section>
+  </main>
+
+  <div class="toast" id="toast">Copied</div>
+
+  <script>
+    const today = new Date();
+    const isoToday = today.toISOString().slice(0, 10);
+    const dayMs = 24 * 60 * 60 * 1000;
+
+    const formatter = new Intl.NumberFormat("en-NG", {
+      style: "currency",
+      currency: "NGN",
+      maximumFractionDigits: 0
+    });
+
+    const demoBalances = [
+      {
+        id: "bal-1",
+        name: "Tolu Martins",
+        phone: "08031234567",
+        amount: 45000,
+        item: "Two custom dresses",
+        dueDate: isoToday,
+        status: "unpaid",
+        tag: "First follow-up",
+        note: "Customer promised to complete payment after salary hits.",
+        paidThisWeek: 0
+      },
+      {
+        id: "bal-2",
+        name: "Mrs. Danjuma",
+        phone: "08098765432",
+        amount: 120000,
+        item: "Aso-ebi group balance",
+        dueDate: new Date(today.getTime() - (2 * dayMs)).toISOString().slice(0, 10),
+        status: "overdue",
+        tag: "Delays often",
+        note: "Said the group treasurer will send balance.",
+        paidThisWeek: 0
+      },
+      {
+        id: "bal-3",
+        name: "Chika N.",
+        phone: "08145550120",
+        amount: 65000,
+        item: "Ready-to-wear order",
+        dueDate: new Date(today.getTime() + dayMs).toISOString().slice(0, 10),
+        status: "part",
+        tag: "Part-payment customer",
+        note: "Paid NGN 35,000, balance remains.",
+        paidThisWeek: 35000
+      },
+      {
+        id: "bal-4",
+        name: "Bola Ade",
+        phone: "07022224444",
+        amount: 90000,
+        item: "Bridal fitting balance",
+        dueDate: new Date(today.getTime() - dayMs).toISOString().slice(0, 10),
+        status: "overdue",
+        tag: "Delays often",
+        note: "Needs firm but respectful reminder.",
+        paidThisWeek: 0
+      },
+      {
+        id: "bal-5",
+        name: "Sarah Okon",
+        phone: "08055556666",
+        amount: 0,
+        item: "Ankara two-piece",
+        dueDate: new Date(today.getTime() - (3 * dayMs)).toISOString().slice(0, 10),
+        status: "paid",
+        tag: "Pays on time",
+        note: "Completed payment by transfer.",
+        paidThisWeek: 78000
+      }
+    ];
+
+    let balances = loadBalances();
+    let selectedId = balances[0]?.id;
+
+    document.getElementById("dueDate").value = isoToday;
+
+    function loadBalances() {
+      try {
+        const saved = localStorage.getItem("payfollow:balances");
+        return saved ? JSON.parse(saved) : demoBalances;
+      } catch {
+        return demoBalances;
+      }
+    }
+
+    function saveBalances() {
+      localStorage.setItem("payfollow:balances", JSON.stringify(balances));
+    }
+
+    function money(value) {
+      return formatter.format(value).replace("NGN", "NGN ");
+    }
+
+    function statusLabel(status) {
+      return {
+        unpaid: "Unpaid",
+        part: "Part paid",
+        overdue: "Overdue",
+        paid: "Paid"
+      }[status] || "Unpaid";
+    }
+
+    function activeBalance() {
+      return balances.find(balance => balance.id === selectedId) || balances[0];
+    }
+
+    function render() {
+      const filter = document.getElementById("filter").value;
+      const visible = balances.filter(balance => filter === "all" || balance.status === filter);
+      const list = document.getElementById("customerList");
+      list.innerHTML = "";
+
+      visible.forEach(balance => {
+        const row = document.createElement("article");
+        row.className = `customer-row ${balance.id === selectedId ? "active" : ""}`;
+        row.innerHTML = `
+          <div>
+            <h4>${balance.name}</h4>
+            <p>${balance.item}</p>
+            <p>${balance.tag} • Due ${formatDate(balance.dueDate)}</p>
+          </div>
+          <div class="amount">
+            <span>${money(balance.amount)}</span>
+            <span class="status ${balance.status}">${statusLabel(balance.status)}</span>
+          </div>
+        `;
+        row.addEventListener("click", () => {
+          selectedId = balance.id;
+          render();
+        });
+        list.appendChild(row);
+      });
+
+      if (!visible.length) {
+        list.innerHTML = `<div class="message-text">No customer balances match this filter.</div>`;
+      }
+
+      renderMetrics();
+      renderMessage();
+      renderReport();
+    }
+
+    function renderMetrics() {
+      const unpaid = balances
+        .filter(balance => balance.status !== "paid")
+        .reduce((sum, balance) => sum + Number(balance.amount), 0);
+      const overdue = balances
+        .filter(balance => balance.status === "overdue")
+        .reduce((sum, balance) => sum + Number(balance.amount), 0);
+      const dueToday = balances
+        .filter(balance => balance.status !== "paid" && balance.dueDate <= isoToday)
+        .length;
+      const paidWeek = balances.reduce((sum, balance) => sum + Number(balance.paidThisWeek || 0), 0);
+
+      document.getElementById("totalUnpaid").textContent = money(unpaid);
+      document.getElementById("totalOverdue").textContent = money(overdue);
+      document.getElementById("dueToday").textContent = String(dueToday);
+      document.getElementById("paidWeek").textContent = money(paidWeek);
+    }
+
+    function renderMessage() {
+      const balance = activeBalance();
+      const messageNode = document.getElementById("messageText");
+      if (!balance) {
+        messageNode.textContent = "Add or select a customer balance to generate a reminder.";
+        return;
+      }
+
+      const tone = document.getElementById("tone").value;
+      const amount = money(balance.amount);
+      const due = formatDate(balance.dueDate);
+      const templates = {
+        polite: `Hello ${balance.name}, good day. This is a kind reminder about your pending balance of ${amount} for ${balance.item}. The agreed due date is ${due}. Please let us know when payment will be completed. Thank you.`,
+        firm: `Hello ${balance.name}, good day. We are following up on the outstanding balance of ${amount} for ${balance.item}, which was due on ${due}. Kindly treat this as important and share payment confirmation once completed. Thank you.`,
+        final: `Hello ${balance.name}, this is a final payment reminder for the outstanding balance of ${amount} for ${balance.item}. Please complete payment today or contact us immediately if there is any issue. We value clear communication and want to close this properly.`,
+        part: `Hello ${balance.name}, thank you for the part payment made so far. Your remaining balance for ${balance.item} is ${amount}. Kindly confirm when the balance will be completed. Thank you for your patronage.`,
+        thanks: `Hello ${balance.name}, payment received with thanks for ${balance.item}. We appreciate your patronage and look forward to serving you again.`
+      };
+
+      messageNode.textContent = templates[tone];
+    }
+
+    function renderReport() {
+      const open = balances.filter(balance => balance.status !== "paid");
+      const overdue = balances.filter(balance => balance.status === "overdue");
+      const dueNow = balances.filter(balance => balance.status !== "paid" && balance.dueDate <= isoToday);
+      const total = open.reduce((sum, balance) => sum + Number(balance.amount), 0);
+      const top = [...open].sort((a, b) => b.amount - a.amount)[0];
+
+      document.getElementById("report").textContent =
+        `Ada's Fashion House has ${money(total)} still unpaid across ${open.length} customers. ` +
+        `${overdue.length} balances are overdue and ${dueNow.length} need follow-up today. ` +
+        `${top ? `The largest open balance is ${money(top.amount)} from ${top.name} for ${top.item}. ` : ""}` +
+        `Recommended action: message overdue customers first, then follow up on today's balances before closing.`;
+    }
+
+    function formatDate(value) {
+      return new Intl.DateTimeFormat("en-NG", {
+        month: "short",
+        day: "numeric",
+        year: "numeric"
+      }).format(new Date(value + "T12:00:00"));
+    }
+
+    function showToast(text) {
+      const toast = document.getElementById("toast");
+      toast.textContent = text;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 1400);
+    }
+
+    async function copyText(text, label) {
+      try {
+        await navigator.clipboard.writeText(text);
+        showToast(label);
+      } catch {
+        const fallback = document.createElement("textarea");
+        fallback.value = text;
+        document.body.appendChild(fallback);
+        fallback.select();
+        document.execCommand("copy");
+        fallback.remove();
+        showToast(label);
+      }
+    }
+
+    document.getElementById("balanceForm").addEventListener("submit", event => {
+      event.preventDefault();
+      const balance = {
+        id: `bal-${Date.now()}`,
+        name: document.getElementById("customerName").value.trim() || "Unnamed customer",
+        phone: document.getElementById("phone").value.trim(),
+        amount: Number(document.getElementById("amount").value || 0),
+        dueDate: document.getElementById("dueDate").value || isoToday,
+        item: document.getElementById("item").value.trim() || "Business balance",
+        status: document.getElementById("status").value,
+        tag: document.getElementById("tag").value,
+        note: document.getElementById("note").value.trim(),
+        paidThisWeek: document.getElementById("status").value === "paid" ? Number(document.getElementById("amount").value || 0) : 0
+      };
+      balances.unshift(balance);
+      selectedId = balance.id;
+      saveBalances();
+      render();
+      showToast("Balance added");
+    });
+
+    document.getElementById("filter").addEventListener("change", render);
+    document.getElementById("tone").addEventListener("change", renderMessage);
+    document.getElementById("copyMessage").addEventListener("click", () => {
+      copyText(document.getElementById("messageText").textContent, "Message copied");
+    });
+    document.getElementById("openWhatsApp").addEventListener("click", () => {
+      const balance = activeBalance();
+      if (!balance) return;
+      const phone = balance.phone.replace(/\D/g, "");
+      const text = encodeURIComponent(document.getElementById("messageText").textContent);
+      const url = phone ? `https://wa.me/234${phone.replace(/^0/, "")}?text=${text}` : `https://wa.me/?text=${text}`;
+      window.open(url, "_blank", "noopener,noreferrer");
+    });
+    document.getElementById("markPaid").addEventListener("click", () => {
+      const balance = activeBalance();
+      if (!balance) return;
+      balance.status = "paid";
+      balance.paidThisWeek = Number(balance.paidThisWeek || 0) + Number(balance.amount);
+      balance.amount = 0;
+      saveBalances();
+      render();
+      showToast("Marked paid");
+    });
+    document.getElementById("markPart").addEventListener("click", () => {
+      const balance = activeBalance();
+      if (!balance) return;
+      balance.status = "part";
+      balance.tag = "Part-payment customer";
+      saveBalances();
+      render();
+      showToast("Marked part-paid");
+    });
+    document.getElementById("saveData").addEventListener("click", () => {
+      saveBalances();
+      showToast("Demo data saved");
+    });
+    document.getElementById("exportReport").addEventListener("click", () => {
+      copyText(document.getElementById("report").textContent, "Report copied");
+    });
+    document.getElementById("resetDemo").addEventListener("click", () => {
+      localStorage.removeItem("payfollow:balances");
+      balances = demoBalances;
+      selectedId = balances[0].id;
+      render();
+      showToast("Demo reset");
+    });
+
+    render();
+  </script>
+</body>
+</html>
+
