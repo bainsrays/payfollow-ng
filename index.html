@@ -3,716 +3,13 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>PayFollow NG - Payment Follow-Up Dashboard</title>
-  <style>
-    :root {
-      --ink: #17211d;
-      --muted: #66736d;
-      --line: #dce5df;
-      --paper: #f7faf7;
-      --panel: #ffffff;
-      --soft: #edf5ef;
-      --accent: #126c4a;
-      --accent-2: #df8f2d;
-      --danger: #b93a32;
-      --blue: #285f9d;
-      --shadow: 0 20px 50px rgba(23, 33, 29, .08);
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      color: var(--ink);
-      background: var(--paper);
-      letter-spacing: 0;
-    }
-
-    button, input, select, textarea { font: inherit; }
-
-    .site-nav {
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      border-bottom: 1px solid rgba(220,229,223,.85);
-      background: rgba(247,250,247,.94);
-      backdrop-filter: blur(14px);
-    }
-
-    .nav-inner,
-    .section-inner {
-      width: min(1180px, calc(100% - 36px));
-      margin: 0 auto;
-    }
-
-    .nav-inner {
-      min-height: 72px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-    }
-
-    .brand.dark .mark {
-      color: #fff;
-      background: var(--accent);
-      border-color: var(--accent);
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-      font-size: 14px;
-      font-weight: 850;
-    }
-
-    .nav-links a {
-      color: var(--muted);
-      text-decoration: none;
-    }
-
-    .nav-links a:hover {
-      color: var(--accent);
-    }
-
-    .nav-actions {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .site-section {
-      padding: 64px 0;
-    }
-
-    .hero {
-      min-height: calc(100vh - 72px);
-      display: grid;
-      align-items: end;
-      color: #fff;
-      background:
-        linear-gradient(90deg, rgba(9, 34, 25, .88), rgba(9, 34, 25, .5), rgba(9, 34, 25, .2)),
-        url("https://images.unsplash.com/photo-1556745757-8d76bdb6984b?auto=format&fit=crop&w=1800&q=80") center/cover;
-    }
-
-    .hero .section-inner {
-      padding: 72px 0 52px;
-    }
-
-    .hero-copy {
-      max-width: 760px;
-    }
-
-    .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 18px;
-      border: 1px solid rgba(255,255,255,.28);
-      border-radius: 999px;
-      padding: 8px 11px;
-      background: rgba(255,255,255,.12);
-      color: rgba(255,255,255,.88);
-      font-size: 13px;
-      font-weight: 850;
-    }
-
-    .hero h1 {
-      margin: 0;
-      max-width: 800px;
-      font-size: clamp(42px, 8vw, 86px);
-      line-height: .95;
-      letter-spacing: 0;
-    }
-
-    .hero p {
-      max-width: 620px;
-      margin: 20px 0 0;
-      color: rgba(255,255,255,.88);
-      font-size: 18px;
-      line-height: 1.55;
-    }
-
-    .hero-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 28px;
-    }
-
-    .hero-actions .btn {
-      border-color: rgba(255,255,255,.35);
-    }
-
-    .hero-actions .btn:not(.primary) {
-      color: #fff;
-      background: rgba(255,255,255,.12);
-    }
-
-    .hero-strip {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 50px;
-      max-width: 860px;
-    }
-
-    .hero-stat {
-      border: 1px solid rgba(255,255,255,.22);
-      border-radius: 8px;
-      padding: 15px;
-      background: rgba(255,255,255,.12);
-    }
-
-    .hero-stat strong {
-      display: block;
-      font-size: 22px;
-      margin-bottom: 4px;
-    }
-
-    .hero-stat span {
-      color: rgba(255,255,255,.78);
-      font-size: 13px;
-      line-height: 1.35;
-    }
-
-    .section-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: end;
-      gap: 18px;
-      margin-bottom: 22px;
-    }
-
-    .section-head h2 {
-      margin: 0;
-      max-width: 640px;
-      font-size: clamp(28px, 4vw, 44px);
-      line-height: 1.05;
-      letter-spacing: 0;
-    }
-
-    .section-head p {
-      margin: 0;
-      max-width: 430px;
-      color: var(--muted);
-      line-height: 1.55;
-    }
-
-    .feature-grid,
-    .pricing-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px;
-    }
-
-    .feature,
-    .price-plan {
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--panel);
-      padding: 18px;
-      box-shadow: var(--shadow);
-    }
-
-    .feature h3,
-    .price-plan h3 {
-      margin: 0 0 10px;
-      font-size: 18px;
-    }
-
-    .feature p,
-    .price-plan p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.55;
-      font-size: 14px;
-    }
-
-    .price-plan strong {
-      display: block;
-      margin-bottom: 10px;
-      font-size: 28px;
-    }
-
-    .demo-shell {
-      padding: 28px 0 0;
-      background: #eef5ef;
-    }
-
-    .shell {
-      min-height: 100vh;
-      display: grid;
-      grid-template-columns: 280px minmax(0, 1fr);
-    }
-
-    .sidebar {
-      min-height: 100vh;
-      padding: 24px;
-      color: #fff;
-      background:
-        linear-gradient(rgba(11, 50, 35, .86), rgba(11, 50, 35, .92)),
-        url("https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=900&q=80") center/cover;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      gap: 28px;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 20px;
-      font-weight: 850;
-    }
-
-    .mark {
-      width: 36px;
-      height: 36px;
-      display: grid;
-      place-items: center;
-      border-radius: 8px;
-      background: rgba(255,255,255,.14);
-      border: 1px solid rgba(255,255,255,.25);
-      font-size: 14px;
-    }
-
-    .sidebar h1 {
-      margin: 0;
-      max-width: 220px;
-      font-size: 38px;
-      line-height: 1;
-      letter-spacing: 0;
-    }
-
-    .sidebar p {
-      margin: 14px 0 0;
-      max-width: 220px;
-      color: rgba(255,255,255,.82);
-      line-height: 1.55;
-    }
-
-    .sidebar-note {
-      display: grid;
-      gap: 8px;
-      color: rgba(255,255,255,.78);
-      font-size: 13px;
-      line-height: 1.45;
-    }
-
-    .workspace {
-      padding: 24px;
-      display: grid;
-      gap: 20px;
-      align-content: start;
-    }
-
-    .topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 16px;
-    }
-
-    .topbar h2 {
-      margin: 0;
-      font-size: 24px;
-      line-height: 1.2;
-    }
-
-    .topbar p {
-      margin: 6px 0 0;
-      color: var(--muted);
-      line-height: 1.45;
-    }
-
-    .badge {
-      white-space: nowrap;
-      border: 1px solid rgba(18,108,74,.2);
-      color: var(--accent);
-      background: rgba(18,108,74,.08);
-      border-radius: 999px;
-      padding: 8px 10px;
-      font-size: 13px;
-      font-weight: 800;
-    }
-
-    .metrics {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 12px;
-    }
-
-    .metric,
-    .panel,
-    .customer-row,
-    .message-box {
-      border: 1px solid var(--line);
-      background: var(--panel);
-      border-radius: 8px;
-    }
-
-    .metric {
-      padding: 16px;
-      min-height: 94px;
-      display: grid;
-      gap: 8px;
-    }
-
-    .metric span {
-      color: var(--muted);
-      font-size: 12px;
-      font-weight: 800;
-      text-transform: uppercase;
-    }
-
-    .metric strong {
-      font-size: 24px;
-      line-height: 1;
-    }
-
-    .metric small {
-      color: var(--muted);
-      line-height: 1.35;
-    }
-
-    .main-grid {
-      display: grid;
-      grid-template-columns: minmax(320px, 420px) minmax(0, 1fr);
-      gap: 18px;
-      align-items: start;
-    }
-
-    .panel {
-      padding: 18px;
-      box-shadow: var(--shadow);
-    }
-
-    .panel h3 {
-      margin: 0 0 12px;
-      font-size: 17px;
-    }
-
-    .form {
-      display: grid;
-      gap: 12px;
-    }
-
-    label {
-      display: grid;
-      gap: 7px;
-      color: var(--muted);
-      font-size: 13px;
-      font-weight: 800;
-    }
-
-    input, select, textarea {
-      width: 100%;
-      border: 1px solid var(--line);
-      border-radius: 6px;
-      padding: 11px 12px;
-      color: var(--ink);
-      background: #fff;
-      outline-color: rgba(18,108,74,.35);
-    }
-
-    textarea {
-      min-height: 82px;
-      resize: vertical;
-    }
-
-    .split {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    .actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .btn {
-      border: 1px solid var(--line);
-      border-radius: 6px;
-      padding: 11px 13px;
-      background: #fff;
-      color: var(--ink);
-      font-weight: 850;
-      cursor: pointer;
-    }
-
-    .btn.primary {
-      border-color: var(--accent);
-      color: #fff;
-      background: var(--accent);
-    }
-
-    .btn.warning {
-      border-color: rgba(223,143,45,.3);
-      color: #5c3510;
-      background: rgba(223,143,45,.12);
-    }
-
-    .btn:active { transform: translateY(1px); }
-
-    .toolbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 12px;
-    }
-
-    .toolbar select {
-      max-width: 180px;
-    }
-
-    .customer-list {
-      display: grid;
-      gap: 10px;
-    }
-
-    .customer-row {
-      padding: 14px;
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 12px;
-      cursor: pointer;
-    }
-
-    .customer-row.active {
-      border-color: rgba(18,108,74,.5);
-      background: rgba(18,108,74,.05);
-    }
-
-    .customer-row h4 {
-      margin: 0 0 5px;
-      font-size: 15px;
-    }
-
-    .customer-row p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.35;
-      font-size: 13px;
-    }
-
-    .amount {
-      text-align: right;
-      display: grid;
-      align-content: start;
-      gap: 7px;
-      font-weight: 850;
-    }
-
-    .status {
-      justify-self: end;
-      width: max-content;
-      border-radius: 999px;
-      padding: 5px 8px;
-      font-size: 11px;
-      font-weight: 850;
-      color: var(--accent);
-      background: rgba(18,108,74,.1);
-    }
-
-    .status.overdue {
-      color: var(--danger);
-      background: rgba(185,58,50,.1);
-    }
-
-    .status.part {
-      color: var(--blue);
-      background: rgba(40,95,157,.1);
-    }
-
-    .status.paid {
-      color: var(--muted);
-      background: var(--soft);
-    }
-
-    .message-box {
-      padding: 16px;
-      min-height: 180px;
-      display: grid;
-      gap: 14px;
-      align-content: start;
-    }
-
-    .message-text {
-      white-space: pre-wrap;
-      color: var(--ink);
-      line-height: 1.55;
-      background: var(--paper);
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 14px;
-      min-height: 124px;
-    }
-
-    .report {
-      margin-top: 14px;
-      color: var(--muted);
-      line-height: 1.55;
-      font-size: 14px;
-    }
-
-    .mini-list {
-      display: grid;
-      gap: 9px;
-      margin-top: 12px;
-    }
-
-    .mini-row {
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--paper);
-      padding: 11px 12px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.35;
-    }
-
-    .mini-row strong {
-      display: block;
-      color: var(--ink);
-      font-size: 14px;
-    }
-
-    .link-row {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 12px;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .link-row a {
-      color: var(--accent);
-      font-weight: 850;
-      text-decoration: none;
-    }
-
-    .divider {
-      height: 1px;
-      background: var(--line);
-      margin: 4px 0;
-    }
-
-    .toast {
-      position: fixed;
-      right: 18px;
-      bottom: 18px;
-      background: var(--ink);
-      color: #fff;
-      border-radius: 8px;
-      padding: 11px 13px;
-      opacity: 0;
-      transform: translateY(10px);
-      transition: .2s ease;
-      pointer-events: none;
-      font-weight: 800;
-      font-size: 13px;
-    }
-
-    .toast.show {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    @media (max-width: 1080px) {
-      .feature-grid,
-      .pricing-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .shell { grid-template-columns: 1fr; }
-      .sidebar {
-        min-height: 360px;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        align-items: end;
-      }
-      .sidebar-note { justify-self: end; }
-    }
-
-    @media (max-width: 860px) {
-      .nav-inner {
-        min-height: auto;
-        padding: 14px 0;
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .nav-links,
-      .nav-actions {
-        width: 100%;
-        justify-content: space-between;
-      }
-
-      .hero-strip,
-      .section-head {
-        grid-template-columns: 1fr;
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .metrics,
-      .main-grid { grid-template-columns: 1fr; }
-      .sidebar { grid-template-columns: 1fr; }
-      .sidebar-note { justify-self: start; }
-    }
-
-    @media (max-width: 560px) {
-      .nav-links {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 10px;
-      }
-
-      .nav-actions {
-        align-items: stretch;
-        flex-direction: column;
-      }
-
-      .hero {
-        min-height: auto;
-      }
-
-      .hero .section-inner {
-        padding: 52px 0 34px;
-      }
-
-      .hero-strip {
-        grid-template-columns: 1fr;
-      }
-
-      .site-section {
-        padding: 44px 0;
-      }
-
-      .workspace, .sidebar { padding: 18px; }
-      .topbar { flex-direction: column; }
-      .badge { white-space: normal; }
-      .split { grid-template-columns: 1fr; }
-      .customer-row { grid-template-columns: 1fr; }
-      .amount { text-align: left; }
-      .status { justify-self: start; }
-    }
-  </style>
+  <meta name="description" content="Payment follow-up website and dashboard for Nigerian small businesses to track unpaid balances and send polite WhatsApp reminders." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23126c4a'/><text x='50' y='68' font-size='52' font-weight='bold' text-anchor='middle' fill='white'>PF</text></svg>" />
+  <title>PayFollow NG — Payment Follow-Up Dashboard</title>
+  <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
+  <!-- Sticky site navigation -->
   <nav class="site-nav">
     <div class="nav-inner">
       <a class="brand dark" href="#home" style="color: inherit; text-decoration: none">
@@ -733,6 +30,7 @@
     </div>
   </nav>
 
+  <!-- Hero -->
   <section class="hero" id="home">
     <div class="section-inner">
       <div class="hero-copy">
@@ -761,6 +59,7 @@
     </div>
   </section>
 
+  <!-- Features -->
   <section class="site-section" id="features">
     <div class="section-inner">
       <div class="section-head">
@@ -796,6 +95,7 @@
     </div>
   </section>
 
+  <!-- Pricing -->
   <section class="site-section" id="pricing">
     <div class="section-inner">
       <div class="section-head">
@@ -822,6 +122,7 @@
     </div>
   </section>
 
+  <!-- Demo shell -->
   <section class="demo-shell" id="demo">
     <div class="section-inner">
       <div class="section-head">
@@ -829,299 +130,313 @@
         <p>Create a demo account, add a business profile, track balances, invite staff, and export reports.</p>
       </div>
     </div>
-  <main class="shell">
-    <aside class="sidebar">
-      <div>
-        <div class="brand">
-          <div class="mark">PF</div>
-          PayFollow NG
-        </div>
-        <div style="height: 72px"></div>
-        <h1>Recover balances without chasing blindly.</h1>
-        <p>Track who owes, what they promised, and send polite WhatsApp-ready reminders from one clean dashboard.</p>
-      </div>
-      <div class="sidebar-note">
-        <span>Hackathon MVP: dashboard + customer balance tracker + AI-style message generator.</span>
-        <span>Safe positioning: polite payment organization, not debt harassment.</span>
-      </div>
-    </aside>
 
-    <section class="workspace">
-      <header class="topbar">
+    <main class="shell">
+      <aside class="sidebar">
         <div>
-          <h2 id="workspaceTitle">Ada's Fashion House Payment Desk</h2>
-          <p id="workspaceSubtitle">Demo business profile for a Nigerian SME managing credit sales, part payments, and customer follow-ups.</p>
+          <div class="brand">
+            <div class="mark">PF</div>
+            PayFollow NG
+          </div>
+          <div style="height: 72px"></div>
+          <h1>Recover balances without chasing blindly.</h1>
+          <p>Track who owes, what they promised, and send polite WhatsApp-ready reminders from one clean dashboard.</p>
         </div>
-        <span class="badge">Group 73 Hackathon MVP</span>
-      </header>
+        <div class="sidebar-note">
+          <span>Hackathon MVP: dashboard + customer balance tracker + reminder template generator.</span>
+          <span>Safe positioning: polite payment organization, not debt harassment.</span>
+        </div>
+      </aside>
 
-      <section class="panel">
-        <div class="toolbar">
-          <h3 style="margin: 0">Business account setup</h3>
-          <span class="status" id="accountStatus">Demo account</span>
-        </div>
-        <form class="form" id="authForm">
-          <div class="split">
-            <label>
-              Account email
-              <input id="accountEmail" type="email" value="owner@payfollow.ng" />
-            </label>
-            <label>
-              Account password
-              <input id="accountPassword" type="password" value="demo1234" />
-            </label>
+      <section class="workspace">
+        <header class="topbar">
+          <div>
+            <h2 id="workspaceTitle">Ada's Fashion House</h2>
+            <p id="workspaceSubtitle">Demo business profile for a Nigerian SME managing credit sales, part payments, and customer follow-ups.</p>
           </div>
-          <div class="actions">
-            <button class="btn primary" id="createAccount" type="submit">Create account</button>
-            <button class="btn" id="loginAccount" type="button">Login</button>
+          <div class="topbar-actions">
+            <button class="btn" id="editBusiness" type="button" title="Edit business name">⚙ Business name</button>
+            <span class="badge">Group 73 Hackathon MVP</span>
           </div>
-        </form>
-        <div class="divider"></div>
-        <form class="form" id="accountForm">
-          <label>
-            Business profile
-            <select id="profileSelector"></select>
-          </label>
-          <div class="split">
-            <label>
-              Business name
-              <input id="businessName" value="Ada's Fashion House" />
-            </label>
-            <label>
-              Owner name
-              <input id="ownerName" value="Ada Okafor" />
-            </label>
-          </div>
-          <div class="split">
-            <label>
-              Business type
-              <select id="businessType">
-                <option>Fashion / tailoring</option>
-                <option>Food vendor</option>
-                <option>Beauty / skincare</option>
-                <option>Phone accessories</option>
-                <option>Wholesale / retail</option>
-                <option>Freelance service</option>
-                <option>School / tutor</option>
-                <option>Other small business</option>
-              </select>
-            </label>
-            <label>
-              WhatsApp number
-              <input id="businessPhone" value="08030000000" />
-            </label>
-          </div>
-          <div class="split">
-            <label>
-              City
-              <input id="businessCity" value="Lagos" />
-            </label>
-            <label>
-              Currency
-              <select id="currency">
-                <option value="NGN">NGN - Nigerian naira</option>
-                <option value="USD">USD - US dollar</option>
-                <option value="GBP">GBP - British pound</option>
-              </select>
-            </label>
-          </div>
-          <div class="actions">
-            <button class="btn primary" type="submit">Create demo account</button>
-            <button class="btn" id="saveBusinessProfile" type="button">Save business profile</button>
-            <button class="btn" id="loadSampleAccount" type="button">Load sample account</button>
-          </div>
-        </form>
-        <div class="link-row">
-          <span>WhatsApp API:</span>
-          <a href="https://developers.facebook.com/docs/whatsapp/cloud-api/get-started" target="_blank" rel="noopener noreferrer">Open Cloud API setup guide</a>
-          <button class="btn" id="copyWhatsappApiLink" type="button">Copy API link</button>
-        </div>
-      </section>
+        </header>
 
-      <section class="metrics">
-        <div class="metric">
-          <span>Total unpaid</span>
-          <strong id="totalUnpaid">NGN 0</strong>
-          <small>Open customer balances</small>
-        </div>
-        <div class="metric">
-          <span>Overdue</span>
-          <strong id="totalOverdue">NGN 0</strong>
-          <small>Needs follow-up now</small>
-        </div>
-        <div class="metric">
-          <span>Due today</span>
-          <strong id="dueToday">0</strong>
-          <small>Customers to message</small>
-        </div>
-        <div class="metric">
-          <span>Paid this week</span>
-          <strong id="paidWeek">NGN 0</strong>
-          <small>Recovered cashflow</small>
-        </div>
-      </section>
-
-      <section class="main-grid">
+        <!-- Business account setup -->
         <section class="panel">
-          <h3>Add customer balance</h3>
-          <form class="form" id="balanceForm">
+          <div class="toolbar">
+            <h3 style="margin: 0">Business account setup</h3>
+            <span class="status" id="accountStatus">Demo account</span>
+          </div>
+          <form class="form" id="authForm" novalidate>
             <div class="split">
               <label>
-                Customer name
-                <input id="customerName" value="Tolu Martins" />
+                Account email
+                <input id="accountEmail" type="email" value="owner@payfollow.ng" />
               </label>
               <label>
-                Phone
-                <input id="phone" value="08031234567" />
+                Account password
+                <input id="accountPassword" type="password" value="demo1234" />
               </label>
             </div>
-            <div class="split">
-              <label>
-                Amount owed
-                <input id="amount" type="number" value="45000" min="0" />
-              </label>
-              <label>
-                Due date
-                <input id="dueDate" type="date" />
-              </label>
-            </div>
-            <label>
-              Item or service
-              <input id="item" value="Two custom dresses" />
-            </label>
-            <div class="split">
-              <label>
-                Status
-                <select id="status">
-                  <option value="unpaid">Unpaid</option>
-                  <option value="part">Part paid</option>
-                  <option value="overdue">Overdue</option>
-                  <option value="paid">Paid</option>
-                </select>
-              </label>
-              <label>
-                Customer tag
-                <select id="tag">
-                  <option>First follow-up</option>
-                  <option>Delays often</option>
-                  <option>Part-payment customer</option>
-                  <option>Pays on time</option>
-                </select>
-              </label>
-            </div>
-            <label>
-              Note or promise
-              <textarea id="note">Customer promised to complete payment after salary hits.</textarea>
-            </label>
             <div class="actions">
-              <button class="btn primary" type="submit">Add balance</button>
-              <button class="btn" type="button" id="saveData">Save demo data</button>
+              <button class="btn primary" id="createAccount" type="submit">Create account</button>
+              <button class="btn" id="loginAccount" type="button">Login</button>
             </div>
           </form>
-        </section>
-
-        <section class="panel">
-          <div class="toolbar">
-            <h3 style="margin: 0">Customer balances</h3>
-            <select id="filter">
-              <option value="all">All statuses</option>
-              <option value="unpaid">Unpaid</option>
-              <option value="part">Part paid</option>
-              <option value="overdue">Overdue</option>
-              <option value="paid">Paid</option>
-            </select>
-          </div>
-          <div class="customer-list" id="customerList"></div>
-        </section>
-      </section>
-
-      <section class="panel">
-        <div class="toolbar">
-          <h3 style="margin: 0">Team and staff access</h3>
-          <span class="status part">Demo permissions</span>
-        </div>
-        <form class="form" id="staffForm">
-          <div class="split">
+          <div class="divider"></div>
+          <form class="form" id="accountForm" novalidate>
             <label>
-              Staff name
-              <input id="staffName" value="Mimi Support" />
+              Business profile
+              <select id="profileSelector"></select>
             </label>
-            <label>
-              Staff email or phone
-              <input id="staffContact" value="mimi@example.com" />
-            </label>
-          </div>
-          <div class="split">
-            <label>
-              Role
-              <select id="staffRole">
-                <option>Owner</option>
-                <option selected>Support staff</option>
-                <option>Accountant</option>
-                <option>Sales rep</option>
-                <option>Viewer</option>
-              </select>
-            </label>
-            <label>
-              Permission
-              <select id="staffPermission">
-                <option>Can add balances and reminders</option>
-                <option>Can view only</option>
-                <option>Can mark payments</option>
-                <option>Can export reports</option>
-              </select>
-            </label>
-          </div>
-          <div class="actions">
-            <button class="btn primary" type="submit">Add staff access</button>
-            <button class="btn" id="copyStaffInvite" type="button">Copy invite message</button>
-          </div>
-        </form>
-        <div class="mini-list" id="staffList"></div>
-      </section>
-
-      <section class="main-grid">
-        <section class="panel">
-          <div class="toolbar">
-            <h3 style="margin: 0">Reminder generator</h3>
-            <select id="tone">
-              <option value="polite">Polite reminder</option>
-              <option value="firm">Firm reminder</option>
-              <option value="final">Final reminder</option>
-              <option value="part">Part-payment follow-up</option>
-              <option value="thanks">Thank-you after payment</option>
-            </select>
-          </div>
-          <div class="message-box">
-            <div class="message-text" id="messageText"></div>
-            <div class="actions">
-              <button class="btn primary" id="copyMessage" type="button">Copy message</button>
-              <button class="btn warning" id="openWhatsApp" type="button">Open WhatsApp</button>
-              <button class="btn" id="markPaid" type="button">Mark paid</button>
-              <button class="btn" id="markPart" type="button">Mark part-paid</button>
+            <div class="split">
+              <label>
+                Business name
+                <input id="businessName" value="Ada's Fashion House" maxlength="100" />
+              </label>
+              <label>
+                Owner name
+                <input id="ownerName" value="Ada Okafor" maxlength="100" />
+              </label>
             </div>
+            <div class="split">
+              <label>
+                Business type
+                <select id="businessType">
+                  <option>Fashion / tailoring</option>
+                  <option>Food vendor</option>
+                  <option>Beauty / skincare</option>
+                  <option>Phone accessories</option>
+                  <option>Wholesale / retail</option>
+                  <option>Freelance service</option>
+                  <option>School / tutor</option>
+                  <option>Other small business</option>
+                </select>
+              </label>
+              <label>
+                WhatsApp number
+                <input id="businessPhone" value="08030000000" maxlength="15" />
+              </label>
+            </div>
+            <div class="split">
+              <label>
+                City
+                <input id="businessCity" value="Lagos" maxlength="50" />
+              </label>
+              <label>
+                Currency
+                <select id="currency">
+                  <option value="NGN">NGN - Nigerian naira</option>
+                  <option value="USD">USD - US dollar</option>
+                  <option value="GBP">GBP - British pound</option>
+                </select>
+              </label>
+            </div>
+            <div class="actions">
+              <button class="btn primary" type="submit">Create demo account</button>
+              <button class="btn" id="saveBusinessProfile" type="button">Save business profile</button>
+              <button class="btn" id="loadSampleAccount" type="button">Load sample account</button>
+            </div>
+          </form>
+          <div class="link-row">
+            <span>WhatsApp API:</span>
+            <a href="https://developers.facebook.com/docs/whatsapp/cloud-api/get-started" target="_blank" rel="noopener noreferrer">Open Cloud API setup guide</a>
+            <button class="btn" id="copyWhatsappApiLink" type="button">Copy API link</button>
           </div>
         </section>
 
-        <section class="panel">
-          <h3>Cashflow report</h3>
-          <div class="report" id="report"></div>
-          <div class="actions" style="margin-top: 16px">
-            <button class="btn" id="exportReport" type="button">Copy report</button>
-            <button class="btn" id="downloadReport" type="button">Download report</button>
-            <button class="btn" id="downloadCsv" type="button">Export CSV</button>
-            <button class="btn" id="resetDemo" type="button">Reset demo</button>
+        <!-- Metrics -->
+        <section class="metrics">
+          <div class="metric">
+            <span>Total unpaid</span>
+            <strong id="totalUnpaid">NGN 0</strong>
+            <small>Open customer balances</small>
+          </div>
+          <div class="metric">
+            <span>Overdue</span>
+            <strong id="totalOverdue">NGN 0</strong>
+            <small>Needs follow-up now</small>
+          </div>
+          <div class="metric">
+            <span>Due today</span>
+            <strong id="dueToday">0</strong>
+            <small>Customers to message</small>
+          </div>
+          <div class="metric">
+            <span>Paid this week</span>
+            <strong id="paidWeek">NGN 0</strong>
+            <small>Recovered cashflow</small>
           </div>
         </section>
+
+        <!-- Add/Edit balance form + customer list -->
+        <section class="main-grid">
+          <section class="panel">
+            <h3 id="formTitle">Add customer balance</h3>
+            <form class="form" id="balanceForm" novalidate>
+              <div class="split">
+                <label>
+                  Customer name *
+                  <input id="customerName" placeholder="e.g. Tolu Martins" maxlength="100" required />
+                </label>
+                <label>
+                  Phone *
+                  <input id="phone" placeholder="e.g. 08031234567" maxlength="15" required />
+                </label>
+              </div>
+              <div class="split">
+                <label>
+                  Amount owed (₦) *
+                  <input id="amount" type="number" min="0" step="1" placeholder="45000" required />
+                </label>
+                <label>
+                  Due date *
+                  <input id="dueDate" type="date" required />
+                </label>
+              </div>
+              <label>
+                Item or service *
+                <input id="item" placeholder="e.g. Two custom dresses" maxlength="200" required />
+              </label>
+              <div class="split">
+                <label>
+                  Status
+                  <select id="status">
+                    <option value="unpaid">Unpaid</option>
+                    <option value="part">Part paid</option>
+                    <option value="overdue">Overdue</option>
+                    <option value="paid">Paid</option>
+                  </select>
+                </label>
+                <label>
+                  Customer tag
+                  <select id="tag">
+                    <option>First follow-up</option>
+                    <option>Delays often</option>
+                    <option>Part-payment customer</option>
+                    <option>Pays on time</option>
+                  </select>
+                </label>
+              </div>
+              <label>
+                Note or promise
+                <textarea id="note" maxlength="500" placeholder="Customer promised to complete payment after salary hits."></textarea>
+              </label>
+              <div class="actions">
+                <button class="btn primary" type="submit" id="submitBtn">Add balance</button>
+                <button class="btn" type="button" id="cancelEdit" style="display:none">Cancel edit</button>
+                <button class="btn" type="button" id="saveData">Save demo data</button>
+              </div>
+              <p class="form-error" id="formError"></p>
+            </form>
+          </section>
+
+          <section class="panel">
+            <div class="toolbar">
+              <h3 style="margin: 0">Customer balances</h3>
+              <select id="filter">
+                <option value="all">All statuses</option>
+                <option value="unpaid">Unpaid</option>
+                <option value="part">Part paid</option>
+                <option value="overdue">Overdue</option>
+                <option value="paid">Paid</option>
+              </select>
+            </div>
+            <div class="customer-list" id="customerList"></div>
+          </section>
+        </section>
+
+        <!-- Team and staff access -->
+        <section class="panel">
+          <div class="toolbar">
+            <h3 style="margin: 0">Team and staff access</h3>
+            <span class="status part">Demo permissions</span>
+          </div>
+          <form class="form" id="staffForm" novalidate>
+            <div class="split">
+              <label>
+                Staff name
+                <input id="staffName" value="Mimi Support" maxlength="100" />
+              </label>
+              <label>
+                Staff email or phone
+                <input id="staffContact" value="mimi@example.com" maxlength="100" />
+              </label>
+            </div>
+            <div class="split">
+              <label>
+                Role
+                <select id="staffRole">
+                  <option>Owner</option>
+                  <option selected>Support staff</option>
+                  <option>Accountant</option>
+                  <option>Sales rep</option>
+                  <option>Viewer</option>
+                </select>
+              </label>
+              <label>
+                Permission
+                <select id="staffPermission">
+                  <option>Can add balances and reminders</option>
+                  <option>Can view only</option>
+                  <option>Can mark payments</option>
+                  <option>Can export reports</option>
+                </select>
+              </label>
+            </div>
+            <div class="actions">
+              <button class="btn primary" type="submit">Add staff access</button>
+              <button class="btn" id="copyStaffInvite" type="button">Copy invite message</button>
+            </div>
+          </form>
+          <div class="mini-list" id="staffList"></div>
+        </section>
+
+        <!-- Reminder generator + Cashflow report -->
+        <section class="main-grid">
+          <section class="panel">
+            <div class="toolbar">
+              <h3 style="margin: 0">Reminder generator</h3>
+              <select id="tone">
+                <option value="polite">Polite reminder</option>
+                <option value="firm">Firm reminder</option>
+                <option value="final">Final reminder</option>
+                <option value="part">Part-payment follow-up</option>
+                <option value="thanks">Thank-you after payment</option>
+              </select>
+            </div>
+            <div class="message-box">
+              <div class="message-text" id="messageText"></div>
+              <div class="actions">
+                <button class="btn primary" id="copyMessage" type="button">Copy message</button>
+                <button class="btn warning" id="openWhatsApp" type="button">Open WhatsApp</button>
+                <button class="btn" id="markPaid" type="button">Mark paid</button>
+                <button class="btn" id="markPart" type="button">Mark part-paid</button>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel">
+            <h3>Cashflow report</h3>
+            <div class="report" id="report"></div>
+            <div class="actions" style="margin-top: 16px">
+              <button class="btn" id="exportReport" type="button">Copy report</button>
+              <button class="btn" id="downloadReport" type="button">Download report</button>
+              <button class="btn" id="downloadCsv" type="button">Export CSV</button>
+              <button class="btn" id="resetDemo" type="button">Reset demo</button>
+            </div>
+            <h3 style="margin-top: 20px">Payment history</h3>
+            <div class="history-list" id="historyList"></div>
+          </section>
+        </section>
       </section>
-    </section>
-  </main>
+    </main>
   </section>
 
+  <!-- Contact -->
   <section class="site-section" id="contact">
     <div class="section-inner">
       <div class="section-head">
-        <h2>Built for business owners tired of “I’ll balance you later.”</h2>
+        <h2>Built for business owners tired of "I'll balance you later."</h2>
         <p>Use the demo link for the hackathon now. The next production step is real authentication, database storage, and payment/WhatsApp integrations.</p>
       </div>
       <div class="actions">
@@ -1131,616 +446,52 @@
     </div>
   </section>
 
+  <!-- Part-payment modal -->
+  <div class="modal-overlay" id="partPayModal">
+    <div class="modal">
+      <h3>Record part payment</h3>
+      <p id="partPayCustomerName" style="color: var(--muted); margin: 0 0 12px"></p>
+      <label>
+        Amount received (₦)
+        <input id="partPayAmount" type="number" min="1" step="1" placeholder="e.g. 15000" />
+      </label>
+      <p class="form-error" id="partPayError"></p>
+      <div class="actions" style="margin-top: 14px">
+        <button class="btn primary" id="confirmPartPay" type="button">Confirm</button>
+        <button class="btn" id="cancelPartPay" type="button">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit business name modal -->
+  <div class="modal-overlay" id="businessModal">
+    <div class="modal">
+      <h3>Edit business name</h3>
+      <label>
+        Business name
+        <input id="businessNameInput" placeholder="e.g. Ada's Fashion House" maxlength="100" />
+      </label>
+      <div class="actions" style="margin-top: 14px">
+        <button class="btn primary" id="saveBusinessName" type="button">Save</button>
+        <button class="btn" id="cancelBusinessName" type="button">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete confirmation modal -->
+  <div class="modal-overlay" id="deleteModal">
+    <div class="modal">
+      <h3>Delete balance record?</h3>
+      <p id="deleteCustomerName" style="color: var(--muted); margin: 0 0 14px"></p>
+      <div class="actions">
+        <button class="btn primary" id="confirmDelete" type="button">Delete</button>
+        <button class="btn" id="cancelDelete" type="button">Cancel</button>
+      </div>
+    </div>
+  </div>
+
   <div class="toast" id="toast">Copied</div>
 
-  <script>
-    const today = new Date();
-    const isoToday = today.toISOString().slice(0, 10);
-    const dayMs = 24 * 60 * 60 * 1000;
-
-    const defaultProfile = {
-      id: "sample-fashion",
-      businessName: "Ada's Fashion House",
-      ownerName: "Ada Okafor",
-      businessType: "Fashion / tailoring",
-      businessPhone: "08030000000",
-      businessCity: "Lagos",
-      currency: "NGN",
-      created: false
-    };
-
-    const defaultAccount = {
-      email: "owner@payfollow.ng",
-      password: "demo1234",
-      loggedIn: false
-    };
-
-    const defaultStaff = [
-      {
-        id: "staff-owner",
-        name: "Ada Okafor",
-        contact: "owner@payfollow.ng",
-        role: "Owner",
-        permission: "Full access"
-      }
-    ];
-
-    let profile = loadProfile();
-    let profiles = loadProfiles();
-    let account = loadAccount();
-    let staff = loadStaff();
-    let formatter = createFormatter(profile.currency);
-
-    const demoBalances = [
-      {
-        id: "bal-1",
-        name: "Tolu Martins",
-        phone: "08031234567",
-        amount: 45000,
-        item: "Two custom dresses",
-        dueDate: isoToday,
-        status: "unpaid",
-        tag: "First follow-up",
-        note: "Customer promised to complete payment after salary hits.",
-        paidThisWeek: 0
-      },
-      {
-        id: "bal-2",
-        name: "Mrs. Danjuma",
-        phone: "08098765432",
-        amount: 120000,
-        item: "Aso-ebi group balance",
-        dueDate: new Date(today.getTime() - (2 * dayMs)).toISOString().slice(0, 10),
-        status: "overdue",
-        tag: "Delays often",
-        note: "Said the group treasurer will send balance.",
-        paidThisWeek: 0
-      },
-      {
-        id: "bal-3",
-        name: "Chika N.",
-        phone: "08145550120",
-        amount: 65000,
-        item: "Ready-to-wear order",
-        dueDate: new Date(today.getTime() + dayMs).toISOString().slice(0, 10),
-        status: "part",
-        tag: "Part-payment customer",
-        note: "Paid NGN 35,000, balance remains.",
-        paidThisWeek: 35000
-      },
-      {
-        id: "bal-4",
-        name: "Bola Ade",
-        phone: "07022224444",
-        amount: 90000,
-        item: "Bridal fitting balance",
-        dueDate: new Date(today.getTime() - dayMs).toISOString().slice(0, 10),
-        status: "overdue",
-        tag: "Delays often",
-        note: "Needs firm but respectful reminder.",
-        paidThisWeek: 0
-      },
-      {
-        id: "bal-5",
-        name: "Sarah Okon",
-        phone: "08055556666",
-        amount: 0,
-        item: "Ankara two-piece",
-        dueDate: new Date(today.getTime() - (3 * dayMs)).toISOString().slice(0, 10),
-        status: "paid",
-        tag: "Pays on time",
-        note: "Completed payment by transfer.",
-        paidThisWeek: 78000
-      }
-    ];
-
-    let balances = loadBalances();
-    let selectedId = balances[0]?.id;
-
-    document.getElementById("dueDate").value = isoToday;
-
-    function createFormatter(currency) {
-      const locale = currency === "NGN" ? "en-NG" : "en-US";
-      return new Intl.NumberFormat(locale, {
-        style: "currency",
-        currency,
-        maximumFractionDigits: 0
-      });
-    }
-
-    function loadProfile() {
-      try {
-        const saved = localStorage.getItem("payfollow:profile");
-        return saved ? { ...defaultProfile, ...JSON.parse(saved) } : { ...defaultProfile };
-      } catch {
-        return { ...defaultProfile };
-      }
-    }
-
-    function loadProfiles() {
-      try {
-        const saved = localStorage.getItem("payfollow:profiles");
-        const parsed = saved ? JSON.parse(saved) : [];
-        return parsed.length ? parsed : [{ ...defaultProfile, created: true }];
-      } catch {
-        return [{ ...defaultProfile, created: true }];
-      }
-    }
-
-    function saveProfiles() {
-      localStorage.setItem("payfollow:profiles", JSON.stringify(profiles));
-    }
-
-    function loadAccount() {
-      try {
-        const saved = localStorage.getItem("payfollow:account");
-        return saved ? { ...defaultAccount, ...JSON.parse(saved) } : { ...defaultAccount };
-      } catch {
-        return { ...defaultAccount };
-      }
-    }
-
-    function saveAccount() {
-      localStorage.setItem("payfollow:account", JSON.stringify(account));
-    }
-
-    function loadStaff() {
-      try {
-        const saved = localStorage.getItem("payfollow:staff");
-        return saved ? JSON.parse(saved) : defaultStaff;
-      } catch {
-        return defaultStaff;
-      }
-    }
-
-    function saveStaff() {
-      localStorage.setItem("payfollow:staff", JSON.stringify(staff));
-    }
-
-    function saveProfile() {
-      localStorage.setItem("payfollow:profile", JSON.stringify(profile));
-    }
-
-    function syncProfileForm() {
-      document.getElementById("accountEmail").value = account.email;
-      document.getElementById("accountPassword").value = account.password;
-      document.getElementById("businessName").value = profile.businessName;
-      document.getElementById("ownerName").value = profile.ownerName;
-      document.getElementById("businessType").value = profile.businessType;
-      document.getElementById("businessPhone").value = profile.businessPhone;
-      document.getElementById("businessCity").value = profile.businessCity;
-      document.getElementById("currency").value = profile.currency;
-    }
-
-    function renderProfileSelector() {
-      const selector = document.getElementById("profileSelector");
-      selector.innerHTML = "";
-      profiles.forEach(item => {
-        const option = document.createElement("option");
-        option.value = item.id;
-        option.textContent = `${item.businessName} - ${item.businessType}`;
-        selector.appendChild(option);
-      });
-      selector.value = profile.id;
-    }
-
-    function renderProfile() {
-      formatter = createFormatter(profile.currency);
-      document.getElementById("workspaceTitle").textContent = `${profile.businessName} Payment Desk`;
-      document.getElementById("workspaceSubtitle").textContent =
-        `${profile.ownerName} • ${profile.businessType} • ${profile.businessCity} • ${profile.businessPhone}`;
-      const accountStatus = document.getElementById("accountStatus");
-      accountStatus.textContent = account.loggedIn ? "Logged in" : profile.created ? "Account set up" : "Demo account";
-      accountStatus.className = `status ${account.loggedIn ? "" : "part"}`;
-      renderProfileSelector();
-      renderStaff();
-    }
-
-    function loadBalances() {
-      try {
-        const saved = localStorage.getItem("payfollow:balances");
-        return saved ? JSON.parse(saved) : demoBalances;
-      } catch {
-        return demoBalances;
-      }
-    }
-
-    function saveBalances() {
-      localStorage.setItem("payfollow:balances", JSON.stringify(balances));
-    }
-
-    function money(value) {
-      return formatter.format(value).replace("NGN", "NGN ");
-    }
-
-    function statusLabel(status) {
-      return {
-        unpaid: "Unpaid",
-        part: "Part paid",
-        overdue: "Overdue",
-        paid: "Paid"
-      }[status] || "Unpaid";
-    }
-
-    function activeBalance() {
-      return balances.find(balance => balance.id === selectedId) || balances[0];
-    }
-
-    function render() {
-      renderProfile();
-      const filter = document.getElementById("filter").value;
-      const visible = balances.filter(balance => filter === "all" || balance.status === filter);
-      const list = document.getElementById("customerList");
-      list.innerHTML = "";
-
-      visible.forEach(balance => {
-        const row = document.createElement("article");
-        row.className = `customer-row ${balance.id === selectedId ? "active" : ""}`;
-        row.innerHTML = `
-          <div>
-            <h4>${balance.name}</h4>
-            <p>${balance.item}</p>
-            <p>${balance.tag} • Due ${formatDate(balance.dueDate)}</p>
-          </div>
-          <div class="amount">
-            <span>${money(balance.amount)}</span>
-            <span class="status ${balance.status}">${statusLabel(balance.status)}</span>
-          </div>
-        `;
-        row.addEventListener("click", () => {
-          selectedId = balance.id;
-          render();
-        });
-        list.appendChild(row);
-      });
-
-      if (!visible.length) {
-        list.innerHTML = `<div class="message-text">No customer balances match this filter.</div>`;
-      }
-
-      renderMetrics();
-      renderMessage();
-      renderReport();
-    }
-
-    function renderMetrics() {
-      const unpaid = balances
-        .filter(balance => balance.status !== "paid")
-        .reduce((sum, balance) => sum + Number(balance.amount), 0);
-      const overdue = balances
-        .filter(balance => balance.status === "overdue")
-        .reduce((sum, balance) => sum + Number(balance.amount), 0);
-      const dueToday = balances
-        .filter(balance => balance.status !== "paid" && balance.dueDate <= isoToday)
-        .length;
-      const paidWeek = balances.reduce((sum, balance) => sum + Number(balance.paidThisWeek || 0), 0);
-
-      document.getElementById("totalUnpaid").textContent = money(unpaid);
-      document.getElementById("totalOverdue").textContent = money(overdue);
-      document.getElementById("dueToday").textContent = String(dueToday);
-      document.getElementById("paidWeek").textContent = money(paidWeek);
-    }
-
-    function renderMessage() {
-      const balance = activeBalance();
-      const messageNode = document.getElementById("messageText");
-      if (!balance) {
-        messageNode.textContent = "Add or select a customer balance to generate a reminder.";
-        return;
-      }
-
-      const tone = document.getElementById("tone").value;
-      const amount = money(balance.amount);
-      const due = formatDate(balance.dueDate);
-      const templates = {
-        polite: `Hello ${balance.name}, good day. This is a kind reminder about your pending balance of ${amount} for ${balance.item}. The agreed due date is ${due}. Please let us know when payment will be completed. Thank you.`,
-        firm: `Hello ${balance.name}, good day. We are following up on the outstanding balance of ${amount} for ${balance.item}, which was due on ${due}. Kindly treat this as important and share payment confirmation once completed. Thank you.`,
-        final: `Hello ${balance.name}, this is a final payment reminder for the outstanding balance of ${amount} for ${balance.item}. Please complete payment today or contact us immediately if there is any issue. We value clear communication and want to close this properly.`,
-        part: `Hello ${balance.name}, thank you for the part payment made so far. Your remaining balance for ${balance.item} is ${amount}. Kindly confirm when the balance will be completed. Thank you for your patronage.`,
-        thanks: `Hello ${balance.name}, payment received with thanks for ${balance.item}. We appreciate your patronage and look forward to serving you again.`
-      };
-
-      messageNode.textContent = templates[tone];
-    }
-
-    function renderReport() {
-      const open = balances.filter(balance => balance.status !== "paid");
-      const overdue = balances.filter(balance => balance.status === "overdue");
-      const dueNow = balances.filter(balance => balance.status !== "paid" && balance.dueDate <= isoToday);
-      const total = open.reduce((sum, balance) => sum + Number(balance.amount), 0);
-      const top = [...open].sort((a, b) => b.amount - a.amount)[0];
-
-      document.getElementById("report").textContent =
-        `${profile.businessName} has ${money(total)} still unpaid across ${open.length} customers. ` +
-        `${overdue.length} balances are overdue and ${dueNow.length} need follow-up today. ` +
-        `${top ? `The largest open balance is ${money(top.amount)} from ${top.name} for ${top.item}. ` : ""}` +
-        `Recommended action: message overdue customers first, then follow up on today's balances before closing.`;
-    }
-
-    function renderStaff() {
-      const list = document.getElementById("staffList");
-      list.innerHTML = "";
-      staff.forEach(member => {
-        const row = document.createElement("div");
-        row.className = "mini-row";
-        row.innerHTML = `
-          <div>
-            <strong>${member.name}</strong>
-            ${member.role} • ${member.permission}<br />
-            ${member.contact}
-          </div>
-          <span class="status">${member.role}</span>
-        `;
-        list.appendChild(row);
-      });
-    }
-
-    function upsertBusinessProfile(nextProfile) {
-      const existingIndex = profiles.findIndex(item => item.id === nextProfile.id);
-      if (existingIndex >= 0) {
-        profiles[existingIndex] = nextProfile;
-      } else {
-        profiles.push(nextProfile);
-      }
-      profile = nextProfile;
-      saveProfile();
-      saveProfiles();
-    }
-
-    function makeProfileFromForm() {
-      const businessName = document.getElementById("businessName").value.trim() || defaultProfile.businessName;
-      const idBase = businessName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "business";
-      return {
-        id: profile.id && profile.businessName === businessName ? profile.id : `${idBase}-${Date.now()}`,
-        businessName,
-        ownerName: document.getElementById("ownerName").value.trim() || defaultProfile.ownerName,
-        businessType: document.getElementById("businessType").value,
-        businessPhone: document.getElementById("businessPhone").value.trim() || defaultProfile.businessPhone,
-        businessCity: document.getElementById("businessCity").value.trim() || defaultProfile.businessCity,
-        currency: document.getElementById("currency").value,
-        created: true
-      };
-    }
-
-    function downloadFile(filename, content, type = "text/plain") {
-      const blob = new Blob([content], { type });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = filename;
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      URL.revokeObjectURL(url);
-    }
-
-    function csvEscape(value) {
-      const text = String(value ?? "");
-      return `"${text.replace(/"/g, '""')}"`;
-    }
-
-    function buildCsv() {
-      const headers = ["Customer", "Phone", "Amount", "Item", "Due date", "Status", "Tag", "Note"];
-      const rows = balances.map(balance => [
-        balance.name,
-        balance.phone,
-        balance.amount,
-        balance.item,
-        balance.dueDate,
-        statusLabel(balance.status),
-        balance.tag,
-        balance.note
-      ]);
-      return [headers, ...rows].map(row => row.map(csvEscape).join(",")).join("\n");
-    }
-
-    function formatDate(value) {
-      return new Intl.DateTimeFormat("en-NG", {
-        month: "short",
-        day: "numeric",
-        year: "numeric"
-      }).format(new Date(value + "T12:00:00"));
-    }
-
-    function showToast(text) {
-      const toast = document.getElementById("toast");
-      toast.textContent = text;
-      toast.classList.add("show");
-      setTimeout(() => toast.classList.remove("show"), 1400);
-    }
-
-    async function copyText(text, label) {
-      try {
-        await navigator.clipboard.writeText(text);
-        showToast(label);
-      } catch {
-        const fallback = document.createElement("textarea");
-        fallback.value = text;
-        document.body.appendChild(fallback);
-        fallback.select();
-        document.execCommand("copy");
-        fallback.remove();
-        showToast(label);
-      }
-    }
-
-    document.getElementById("balanceForm").addEventListener("submit", event => {
-      event.preventDefault();
-      const balance = {
-        id: `bal-${Date.now()}`,
-        name: document.getElementById("customerName").value.trim() || "Unnamed customer",
-        phone: document.getElementById("phone").value.trim(),
-        amount: Number(document.getElementById("amount").value || 0),
-        dueDate: document.getElementById("dueDate").value || isoToday,
-        item: document.getElementById("item").value.trim() || "Business balance",
-        status: document.getElementById("status").value,
-        tag: document.getElementById("tag").value,
-        note: document.getElementById("note").value.trim(),
-        paidThisWeek: document.getElementById("status").value === "paid" ? Number(document.getElementById("amount").value || 0) : 0
-      };
-      balances.unshift(balance);
-      selectedId = balance.id;
-      saveBalances();
-      render();
-      showToast("Balance added");
-    });
-
-    document.getElementById("authForm").addEventListener("submit", event => {
-      event.preventDefault();
-      account = {
-        email: document.getElementById("accountEmail").value.trim() || defaultAccount.email,
-        password: document.getElementById("accountPassword").value || defaultAccount.password,
-        loggedIn: true
-      };
-      saveAccount();
-      render();
-      showToast("Demo account created");
-    });
-
-    document.getElementById("loginAccount").addEventListener("click", () => {
-      const email = document.getElementById("accountEmail").value.trim();
-      const password = document.getElementById("accountPassword").value;
-      account.email = email || account.email;
-      account.password = password || account.password;
-      account.loggedIn = true;
-      saveAccount();
-      render();
-      showToast("Logged in");
-    });
-
-    document.getElementById("accountForm").addEventListener("submit", event => {
-      event.preventDefault();
-      upsertBusinessProfile(makeProfileFromForm());
-      render();
-      showToast("Demo account created");
-    });
-
-    document.getElementById("saveBusinessProfile").addEventListener("click", () => {
-      upsertBusinessProfile(makeProfileFromForm());
-      render();
-      showToast("Business profile saved");
-    });
-
-    document.getElementById("profileSelector").addEventListener("change", event => {
-      const nextProfile = profiles.find(item => item.id === event.target.value);
-      if (!nextProfile) return;
-      profile = { ...defaultProfile, ...nextProfile };
-      saveProfile();
-      syncProfileForm();
-      render();
-      showToast("Business profile loaded");
-    });
-
-    document.getElementById("loadSampleAccount").addEventListener("click", () => {
-      profile = { ...defaultProfile, created: true };
-      upsertBusinessProfile(profile);
-      syncProfileForm();
-      render();
-      showToast("Sample account loaded");
-    });
-
-    document.getElementById("copyWhatsappApiLink").addEventListener("click", () => {
-      copyText("https://developers.facebook.com/docs/whatsapp/cloud-api/get-started", "WhatsApp API link copied");
-    });
-
-    document.getElementById("staffForm").addEventListener("submit", event => {
-      event.preventDefault();
-      const member = {
-        id: `staff-${Date.now()}`,
-        name: document.getElementById("staffName").value.trim() || "New staff",
-        contact: document.getElementById("staffContact").value.trim() || "No contact added",
-        role: document.getElementById("staffRole").value,
-        permission: document.getElementById("staffPermission").value
-      };
-      staff.push(member);
-      saveStaff();
-      renderStaff();
-      showToast("Staff access added");
-    });
-
-    document.getElementById("copyStaffInvite").addEventListener("click", () => {
-      const name = document.getElementById("staffName").value.trim() || "there";
-      const role = document.getElementById("staffRole").value;
-      const permission = document.getElementById("staffPermission").value;
-      copyText(
-        `Hello ${name}, you have been invited to help manage ${profile.businessName} on PayFollow NG as ${role}. Permission: ${permission}.`,
-        "Staff invite copied"
-      );
-    });
-
-    document.getElementById("filter").addEventListener("change", render);
-    document.getElementById("tone").addEventListener("change", renderMessage);
-    document.getElementById("copyMessage").addEventListener("click", () => {
-      copyText(document.getElementById("messageText").textContent, "Message copied");
-    });
-    document.getElementById("openWhatsApp").addEventListener("click", () => {
-      const balance = activeBalance();
-      if (!balance) return;
-      const phone = balance.phone.replace(/\D/g, "");
-      const text = encodeURIComponent(document.getElementById("messageText").textContent);
-      const url = phone ? `https://wa.me/234${phone.replace(/^0/, "")}?text=${text}` : `https://wa.me/?text=${text}`;
-      window.open(url, "_blank", "noopener,noreferrer");
-    });
-    document.getElementById("markPaid").addEventListener("click", () => {
-      const balance = activeBalance();
-      if (!balance) return;
-      balance.status = "paid";
-      balance.paidThisWeek = Number(balance.paidThisWeek || 0) + Number(balance.amount);
-      balance.amount = 0;
-      saveBalances();
-      render();
-      showToast("Marked paid");
-    });
-    document.getElementById("markPart").addEventListener("click", () => {
-      const balance = activeBalance();
-      if (!balance) return;
-      balance.status = "part";
-      balance.tag = "Part-payment customer";
-      saveBalances();
-      render();
-      showToast("Marked part-paid");
-    });
-    document.getElementById("saveData").addEventListener("click", () => {
-      saveBalances();
-      showToast("Demo data saved");
-    });
-    document.getElementById("exportReport").addEventListener("click", () => {
-      copyText(document.getElementById("report").textContent, "Report copied");
-    });
-    document.getElementById("downloadReport").addEventListener("click", () => {
-      downloadFile(
-        `${profile.businessName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-cashflow-report.txt`,
-        document.getElementById("report").textContent
-      );
-      showToast("Report downloaded");
-    });
-    document.getElementById("downloadCsv").addEventListener("click", () => {
-      downloadFile(
-        `${profile.businessName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-balances.csv`,
-        buildCsv(),
-        "text/csv"
-      );
-      showToast("CSV exported");
-    });
-    document.getElementById("resetDemo").addEventListener("click", () => {
-      localStorage.removeItem("payfollow:balances");
-      localStorage.removeItem("payfollow:profile");
-      localStorage.removeItem("payfollow:profiles");
-      localStorage.removeItem("payfollow:account");
-      localStorage.removeItem("payfollow:staff");
-      balances = demoBalances;
-      profile = { ...defaultProfile };
-      profiles = [{ ...defaultProfile, created: true }];
-      account = { ...defaultAccount };
-      staff = defaultStaff;
-      selectedId = balances[0].id;
-      syncProfileForm();
-      render();
-      showToast("Demo reset");
-    });
-
-    syncProfileForm();
-    render();
-  </script>
+  <script type="module" src="js/app.js"></script>
 </body>
 </html>
