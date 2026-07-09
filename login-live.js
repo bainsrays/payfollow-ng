@@ -93,6 +93,14 @@
 
       if (result.error) throw result.error;
       const user = result.data.user;
+      const session = result.data.session;
+
+      if (mode() !== "signin" && !session) {
+        status.textContent = "Account created. Check your email to confirm it, then return here and use Login.";
+        submit.disabled = false;
+        return;
+      }
+
       if (user && mode() !== "signin") await createBusinessProfile(user);
       if (user) persistSession(user);
 

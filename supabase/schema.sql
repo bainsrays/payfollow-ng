@@ -78,12 +78,14 @@ alter table public.staff_members enable row level security;
 alter table public.payment_history enable row level security;
 alter table public.activity_logs enable row level security;
 
+drop policy if exists "Owners can manage their business profiles" on public.business_profiles;
 create policy "Owners can manage their business profiles"
 on public.business_profiles
 for all
 using (owner_id = auth.uid())
 with check (owner_id = auth.uid());
 
+drop policy if exists "Owners can manage balances for their businesses" on public.customer_balances;
 create policy "Owners can manage balances for their businesses"
 on public.customer_balances
 for all
@@ -104,6 +106,7 @@ with check (
   )
 );
 
+drop policy if exists "Owners can manage staff for their businesses" on public.staff_members;
 create policy "Owners can manage staff for their businesses"
 on public.staff_members
 for all
@@ -124,6 +127,7 @@ with check (
   )
 );
 
+drop policy if exists "Owners can manage payment history for their businesses" on public.payment_history;
 create policy "Owners can manage payment history for their businesses"
 on public.payment_history
 for all
@@ -144,6 +148,7 @@ with check (
   )
 );
 
+drop policy if exists "Owners can read activity logs for their businesses" on public.activity_logs;
 create policy "Owners can read activity logs for their businesses"
 on public.activity_logs
 for select
@@ -156,6 +161,7 @@ using (
   )
 );
 
+drop policy if exists "Owners can add activity logs for their businesses" on public.activity_logs;
 create policy "Owners can add activity logs for their businesses"
 on public.activity_logs
 for insert
@@ -202,6 +208,11 @@ create index if not exists payment_history_business_id_idx on public.payment_his
 create index if not exists activity_logs_business_id_idx on public.activity_logs(business_id);
 
 grant usage on schema public to anon, authenticated;
+grant select on public.business_profiles to anon;
+grant select on public.customer_balances to anon;
+grant select on public.staff_members to anon;
+grant select on public.payment_history to anon;
+grant select on public.activity_logs to anon;
 grant select, insert, update, delete on public.business_profiles to authenticated;
 grant select, insert, update, delete on public.customer_balances to authenticated;
 grant select, insert, update, delete on public.staff_members to authenticated;
