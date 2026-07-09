@@ -93,7 +93,7 @@
     }
 
     .nav-auth summary::after {
-      content: " v";
+      content: "";
       font-size: 11px;
       color: var(--accent);
     }
@@ -816,7 +816,7 @@
               <input id="loginPassword" type="password" value="demo1234" required />
             </label>
           </div>
-          <div class="split">
+          <div class="split business-fields">
             <label>
               Business name
               <input id="loginBusinessName" type="text" value="Ada's Fashion House" required />
@@ -826,7 +826,7 @@
               <input id="loginOwnerName" type="text" value="Ada Okafor" required />
             </label>
           </div>
-          <div class="split">
+          <div class="split business-fields">
             <label>
               Business type
               <select id="loginBusinessType">
@@ -844,7 +844,7 @@
               <input id="loginBusinessPhone" type="tel" value="08012345678" required />
             </label>
           </div>
-          <div class="split">
+          <div class="split business-fields">
             <label>
               City
               <input id="loginBusinessCity" type="text" value="Lagos" required />
@@ -915,6 +915,12 @@
       const createMode = document.getElementById("createMode");
       const signinMode = document.getElementById("signinMode");
       const isSignin = accountMode === "signin";
+      document.querySelectorAll(".business-fields").forEach(field => {
+        field.style.display = isSignin ? "none" : "";
+        field.querySelectorAll("input, select").forEach(input => {
+          input.disabled = isSignin;
+        });
+      });
       createMode.className = isSignin ? "btn" : "btn primary";
       signinMode.className = isSignin ? "btn primary" : "btn";
       document.getElementById("loginTitle").textContent = isSignin
@@ -953,6 +959,7 @@
   </script>
 </body>
 </html>
+
 
 
 
