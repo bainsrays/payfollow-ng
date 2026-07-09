@@ -200,3 +200,10 @@ create index if not exists customer_balances_due_date_idx on public.customer_bal
 create index if not exists staff_members_business_id_idx on public.staff_members(business_id);
 create index if not exists payment_history_business_id_idx on public.payment_history(business_id);
 create index if not exists activity_logs_business_id_idx on public.activity_logs(business_id);
+
+grant usage on schema public to anon, authenticated;
+grant select, insert, update, delete on public.business_profiles to authenticated;
+grant select, insert, update, delete on public.customer_balances to authenticated;
+grant select, insert, update, delete on public.staff_members to authenticated;
+grant select, insert, update, delete on public.payment_history to authenticated;
+grant select, insert on public.activity_logs to authenticated;
