@@ -76,8 +76,62 @@
     .nav-links a:hover {
       color: var(--accent);
     }
+    .nav-auth {
+      position: relative;
+    }
 
-    .nav-actions {
+    .nav-auth summary {
+      list-style: none;
+      cursor: pointer;
+      color: var(--muted);
+      font-weight: 850;
+      outline: none;
+    }
+
+    .nav-auth summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .nav-auth summary::after {
+      content: " v";
+      font-size: 11px;
+      color: var(--accent);
+    }
+
+    .nav-auth[open] summary,
+    .nav-auth summary:hover {
+      color: var(--accent);
+    }
+
+    .auth-menu {
+      position: absolute;
+      right: 0;
+      top: 30px;
+      width: 220px;
+      display: grid;
+      gap: 8px;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      z-index: 40;
+    }
+
+    .auth-menu a {
+      display: block;
+      padding: 10px 12px;
+      border-radius: 8px;
+      color: var(--ink);
+      text-decoration: none;
+      background: var(--paper);
+    }
+
+    .auth-menu a:hover {
+      background: var(--soft);
+      color: var(--accent);
+    }
+.nav-actions {
       display: flex;
       align-items: center;
       gap: 10px;
@@ -656,7 +710,7 @@
       }
 
       .nav-links,
-      .nav-actions {
+.nav-actions {
         width: 100%;
         justify-content: space-between;
       }
@@ -680,8 +734,7 @@
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 10px;
       }
-
-      .nav-actions {
+.nav-actions {
         align-items: stretch;
         flex-direction: column;
       }
@@ -725,7 +778,14 @@
         <a href="pricing.html">Pricing</a>
         <a href="app.html">Demo</a>
         <a href="contact.html">Contact</a>
-        <a href="login.html">Login</a>
+        <details class="nav-auth">
+          <summary>Login</summary>
+          <div class="auth-menu">
+            <a href="login.html">Create account</a>
+            <a href="login.html?mode=signin">Sign in</a>
+            <a href="app.html">Open dashboard</a>
+          </div>
+        </details>
       </div>
       <div class="nav-actions">
         <a class="btn" href="https://github.com/bainsrays/payfollow-ng" target="_blank" rel="noopener noreferrer">GitHub</a>
@@ -1635,6 +1695,10 @@
 
 </body>
 </html>
+
+
+
+
 
 
 
