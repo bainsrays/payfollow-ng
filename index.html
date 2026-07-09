@@ -351,6 +351,54 @@
       font-size: 14px;
     }
 
+    .mini-list {
+      display: grid;
+      gap: 9px;
+      margin-top: 12px;
+    }
+
+    .mini-row {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--paper);
+      padding: 11px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .mini-row strong {
+      display: block;
+      color: var(--ink);
+      font-size: 14px;
+    }
+
+    .link-row {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .link-row a {
+      color: var(--accent);
+      font-weight: 850;
+      text-decoration: none;
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--line);
+      margin: 4px 0;
+    }
+
     .toast {
       position: fixed;
       right: 18px;
@@ -433,7 +481,28 @@
           <h3 style="margin: 0">Business account setup</h3>
           <span class="status" id="accountStatus">Demo account</span>
         </div>
+        <form class="form" id="authForm">
+          <div class="split">
+            <label>
+              Account email
+              <input id="accountEmail" type="email" value="owner@payfollow.ng" />
+            </label>
+            <label>
+              Account password
+              <input id="accountPassword" type="password" value="demo1234" />
+            </label>
+          </div>
+          <div class="actions">
+            <button class="btn primary" id="createAccount" type="submit">Create account</button>
+            <button class="btn" id="loginAccount" type="button">Login</button>
+          </div>
+        </form>
+        <div class="divider"></div>
         <form class="form" id="accountForm">
+          <label>
+            Business profile
+            <select id="profileSelector"></select>
+          </label>
           <div class="split">
             <label>
               Business name
@@ -479,9 +548,15 @@
           </div>
           <div class="actions">
             <button class="btn primary" type="submit">Create demo account</button>
+            <button class="btn" id="saveBusinessProfile" type="button">Save business profile</button>
             <button class="btn" id="loadSampleAccount" type="button">Load sample account</button>
           </div>
         </form>
+        <div class="link-row">
+          <span>WhatsApp API:</span>
+          <a href="https://developers.facebook.com/docs/whatsapp/cloud-api/get-started" target="_blank" rel="noopener noreferrer">Open Cloud API setup guide</a>
+          <button class="btn" id="copyWhatsappApiLink" type="button">Copy API link</button>
+        </div>
       </section>
 
       <section class="metrics">
@@ -581,6 +656,51 @@
         </section>
       </section>
 
+      <section class="panel">
+        <div class="toolbar">
+          <h3 style="margin: 0">Team and staff access</h3>
+          <span class="status part">Demo permissions</span>
+        </div>
+        <form class="form" id="staffForm">
+          <div class="split">
+            <label>
+              Staff name
+              <input id="staffName" value="Mimi Support" />
+            </label>
+            <label>
+              Staff email or phone
+              <input id="staffContact" value="mimi@example.com" />
+            </label>
+          </div>
+          <div class="split">
+            <label>
+              Role
+              <select id="staffRole">
+                <option>Owner</option>
+                <option selected>Support staff</option>
+                <option>Accountant</option>
+                <option>Sales rep</option>
+                <option>Viewer</option>
+              </select>
+            </label>
+            <label>
+              Permission
+              <select id="staffPermission">
+                <option>Can add balances and reminders</option>
+                <option>Can view only</option>
+                <option>Can mark payments</option>
+                <option>Can export reports</option>
+              </select>
+            </label>
+          </div>
+          <div class="actions">
+            <button class="btn primary" type="submit">Add staff access</button>
+            <button class="btn" id="copyStaffInvite" type="button">Copy invite message</button>
+          </div>
+        </form>
+        <div class="mini-list" id="staffList"></div>
+      </section>
+
       <section class="main-grid">
         <section class="panel">
           <div class="toolbar">
@@ -609,6 +729,8 @@
           <div class="report" id="report"></div>
           <div class="actions" style="margin-top: 16px">
             <button class="btn" id="exportReport" type="button">Copy report</button>
+            <button class="btn" id="downloadReport" type="button">Download report</button>
+            <button class="btn" id="downloadCsv" type="button">Export CSV</button>
             <button class="btn" id="resetDemo" type="button">Reset demo</button>
           </div>
         </section>
@@ -624,6 +746,7 @@
     const dayMs = 24 * 60 * 60 * 1000;
 
     const defaultProfile = {
+      id: "sample-fashion",
       businessName: "Ada's Fashion House",
       ownerName: "Ada Okafor",
       businessType: "Fashion / tailoring",
@@ -633,7 +756,26 @@
       created: false
     };
 
+    const defaultAccount = {
+      email: "owner@payfollow.ng",
+      password: "demo1234",
+      loggedIn: false
+    };
+
+    const defaultStaff = [
+      {
+        id: "staff-owner",
+        name: "Ada Okafor",
+        contact: "owner@payfollow.ng",
+        role: "Owner",
+        permission: "Full access"
+      }
+    ];
+
     let profile = loadProfile();
+    let profiles = loadProfiles();
+    let account = loadAccount();
+    let staff = loadStaff();
     let formatter = createFormatter(profile.currency);
 
     const demoBalances = [
@@ -722,11 +864,53 @@
       }
     }
 
+    function loadProfiles() {
+      try {
+        const saved = localStorage.getItem("payfollow:profiles");
+        const parsed = saved ? JSON.parse(saved) : [];
+        return parsed.length ? parsed : [{ ...defaultProfile, created: true }];
+      } catch {
+        return [{ ...defaultProfile, created: true }];
+      }
+    }
+
+    function saveProfiles() {
+      localStorage.setItem("payfollow:profiles", JSON.stringify(profiles));
+    }
+
+    function loadAccount() {
+      try {
+        const saved = localStorage.getItem("payfollow:account");
+        return saved ? { ...defaultAccount, ...JSON.parse(saved) } : { ...defaultAccount };
+      } catch {
+        return { ...defaultAccount };
+      }
+    }
+
+    function saveAccount() {
+      localStorage.setItem("payfollow:account", JSON.stringify(account));
+    }
+
+    function loadStaff() {
+      try {
+        const saved = localStorage.getItem("payfollow:staff");
+        return saved ? JSON.parse(saved) : defaultStaff;
+      } catch {
+        return defaultStaff;
+      }
+    }
+
+    function saveStaff() {
+      localStorage.setItem("payfollow:staff", JSON.stringify(staff));
+    }
+
     function saveProfile() {
       localStorage.setItem("payfollow:profile", JSON.stringify(profile));
     }
 
     function syncProfileForm() {
+      document.getElementById("accountEmail").value = account.email;
+      document.getElementById("accountPassword").value = account.password;
       document.getElementById("businessName").value = profile.businessName;
       document.getElementById("ownerName").value = profile.ownerName;
       document.getElementById("businessType").value = profile.businessType;
@@ -735,14 +919,28 @@
       document.getElementById("currency").value = profile.currency;
     }
 
+    function renderProfileSelector() {
+      const selector = document.getElementById("profileSelector");
+      selector.innerHTML = "";
+      profiles.forEach(item => {
+        const option = document.createElement("option");
+        option.value = item.id;
+        option.textContent = `${item.businessName} - ${item.businessType}`;
+        selector.appendChild(option);
+      });
+      selector.value = profile.id;
+    }
+
     function renderProfile() {
       formatter = createFormatter(profile.currency);
       document.getElementById("workspaceTitle").textContent = `${profile.businessName} Payment Desk`;
       document.getElementById("workspaceSubtitle").textContent =
         `${profile.ownerName} • ${profile.businessType} • ${profile.businessCity} • ${profile.businessPhone}`;
       const accountStatus = document.getElementById("accountStatus");
-      accountStatus.textContent = profile.created ? "Account set up" : "Demo account";
-      accountStatus.className = `status ${profile.created ? "" : "part"}`;
+      accountStatus.textContent = account.loggedIn ? "Logged in" : profile.created ? "Account set up" : "Demo account";
+      accountStatus.className = `status ${account.loggedIn ? "" : "part"}`;
+      renderProfileSelector();
+      renderStaff();
     }
 
     function loadBalances() {
@@ -866,6 +1064,83 @@
         `Recommended action: message overdue customers first, then follow up on today's balances before closing.`;
     }
 
+    function renderStaff() {
+      const list = document.getElementById("staffList");
+      list.innerHTML = "";
+      staff.forEach(member => {
+        const row = document.createElement("div");
+        row.className = "mini-row";
+        row.innerHTML = `
+          <div>
+            <strong>${member.name}</strong>
+            ${member.role} • ${member.permission}<br />
+            ${member.contact}
+          </div>
+          <span class="status">${member.role}</span>
+        `;
+        list.appendChild(row);
+      });
+    }
+
+    function upsertBusinessProfile(nextProfile) {
+      const existingIndex = profiles.findIndex(item => item.id === nextProfile.id);
+      if (existingIndex >= 0) {
+        profiles[existingIndex] = nextProfile;
+      } else {
+        profiles.push(nextProfile);
+      }
+      profile = nextProfile;
+      saveProfile();
+      saveProfiles();
+    }
+
+    function makeProfileFromForm() {
+      const businessName = document.getElementById("businessName").value.trim() || defaultProfile.businessName;
+      const idBase = businessName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "business";
+      return {
+        id: profile.id && profile.businessName === businessName ? profile.id : `${idBase}-${Date.now()}`,
+        businessName,
+        ownerName: document.getElementById("ownerName").value.trim() || defaultProfile.ownerName,
+        businessType: document.getElementById("businessType").value,
+        businessPhone: document.getElementById("businessPhone").value.trim() || defaultProfile.businessPhone,
+        businessCity: document.getElementById("businessCity").value.trim() || defaultProfile.businessCity,
+        currency: document.getElementById("currency").value,
+        created: true
+      };
+    }
+
+    function downloadFile(filename, content, type = "text/plain") {
+      const blob = new Blob([content], { type });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    function csvEscape(value) {
+      const text = String(value ?? "");
+      return `"${text.replace(/"/g, '""')}"`;
+    }
+
+    function buildCsv() {
+      const headers = ["Customer", "Phone", "Amount", "Item", "Due date", "Status", "Tag", "Note"];
+      const rows = balances.map(balance => [
+        balance.name,
+        balance.phone,
+        balance.amount,
+        balance.item,
+        balance.dueDate,
+        statusLabel(balance.status),
+        balance.tag,
+        balance.note
+      ]);
+      return [headers, ...rows].map(row => row.map(csvEscape).join(",")).join("\n");
+    }
+
     function formatDate(value) {
       return new Intl.DateTimeFormat("en-NG", {
         month: "short",
@@ -917,28 +1192,87 @@
       showToast("Balance added");
     });
 
-    document.getElementById("accountForm").addEventListener("submit", event => {
+    document.getElementById("authForm").addEventListener("submit", event => {
       event.preventDefault();
-      profile = {
-        businessName: document.getElementById("businessName").value.trim() || defaultProfile.businessName,
-        ownerName: document.getElementById("ownerName").value.trim() || defaultProfile.ownerName,
-        businessType: document.getElementById("businessType").value,
-        businessPhone: document.getElementById("businessPhone").value.trim() || defaultProfile.businessPhone,
-        businessCity: document.getElementById("businessCity").value.trim() || defaultProfile.businessCity,
-        currency: document.getElementById("currency").value,
-        created: true
+      account = {
+        email: document.getElementById("accountEmail").value.trim() || defaultAccount.email,
+        password: document.getElementById("accountPassword").value || defaultAccount.password,
+        loggedIn: true
       };
-      saveProfile();
+      saveAccount();
       render();
       showToast("Demo account created");
     });
 
+    document.getElementById("loginAccount").addEventListener("click", () => {
+      const email = document.getElementById("accountEmail").value.trim();
+      const password = document.getElementById("accountPassword").value;
+      account.email = email || account.email;
+      account.password = password || account.password;
+      account.loggedIn = true;
+      saveAccount();
+      render();
+      showToast("Logged in");
+    });
+
+    document.getElementById("accountForm").addEventListener("submit", event => {
+      event.preventDefault();
+      upsertBusinessProfile(makeProfileFromForm());
+      render();
+      showToast("Demo account created");
+    });
+
+    document.getElementById("saveBusinessProfile").addEventListener("click", () => {
+      upsertBusinessProfile(makeProfileFromForm());
+      render();
+      showToast("Business profile saved");
+    });
+
+    document.getElementById("profileSelector").addEventListener("change", event => {
+      const nextProfile = profiles.find(item => item.id === event.target.value);
+      if (!nextProfile) return;
+      profile = { ...defaultProfile, ...nextProfile };
+      saveProfile();
+      syncProfileForm();
+      render();
+      showToast("Business profile loaded");
+    });
+
     document.getElementById("loadSampleAccount").addEventListener("click", () => {
       profile = { ...defaultProfile, created: true };
+      upsertBusinessProfile(profile);
       syncProfileForm();
-      saveProfile();
       render();
       showToast("Sample account loaded");
+    });
+
+    document.getElementById("copyWhatsappApiLink").addEventListener("click", () => {
+      copyText("https://developers.facebook.com/docs/whatsapp/cloud-api/get-started", "WhatsApp API link copied");
+    });
+
+    document.getElementById("staffForm").addEventListener("submit", event => {
+      event.preventDefault();
+      const member = {
+        id: `staff-${Date.now()}`,
+        name: document.getElementById("staffName").value.trim() || "New staff",
+        contact: document.getElementById("staffContact").value.trim() || "No contact added",
+        role: document.getElementById("staffRole").value,
+        permission: document.getElementById("staffPermission").value
+      };
+      staff.push(member);
+      saveStaff();
+      renderStaff();
+      showToast("Staff access added");
+    });
+
+    document.getElementById("copyStaffInvite").addEventListener("click", () => {
+      const name = document.getElementById("staffName").value.trim() || "there";
+      const role = document.getElementById("staffRole").value;
+      const permission = document.getElementById("staffPermission").value;
+      copyText(
+        `Hello ${name}, you have been invited to help manage ${profile.businessName} on PayFollow NG as ${role}. Permission: ${permission}.`,
+        "Staff invite copied"
+      );
     });
 
     document.getElementById("filter").addEventListener("change", render);
@@ -980,11 +1314,32 @@
     document.getElementById("exportReport").addEventListener("click", () => {
       copyText(document.getElementById("report").textContent, "Report copied");
     });
+    document.getElementById("downloadReport").addEventListener("click", () => {
+      downloadFile(
+        `${profile.businessName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-cashflow-report.txt`,
+        document.getElementById("report").textContent
+      );
+      showToast("Report downloaded");
+    });
+    document.getElementById("downloadCsv").addEventListener("click", () => {
+      downloadFile(
+        `${profile.businessName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-balances.csv`,
+        buildCsv(),
+        "text/csv"
+      );
+      showToast("CSV exported");
+    });
     document.getElementById("resetDemo").addEventListener("click", () => {
       localStorage.removeItem("payfollow:balances");
       localStorage.removeItem("payfollow:profile");
+      localStorage.removeItem("payfollow:profiles");
+      localStorage.removeItem("payfollow:account");
+      localStorage.removeItem("payfollow:staff");
       balances = demoBalances;
       profile = { ...defaultProfile };
+      profiles = [{ ...defaultProfile, created: true }];
+      account = { ...defaultAccount };
+      staff = defaultStaff;
       selectedId = balances[0].id;
       syncProfileForm();
       render();

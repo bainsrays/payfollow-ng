@@ -45,6 +45,9 @@ A Nigerian fashion seller has money stuck across multiple customers. PayFollow N
 ## Current Features
 
 - Demo business account setup
+- Demo create account and login flow
+- Multiple business profiles
+- Team/staff access management
 - Dashboard metrics
 - Demo Nigerian SME customer balances
 - Add customer balance form
@@ -54,6 +57,9 @@ A Nigerian fashion seller has money stuck across multiple customers. PayFollow N
 - Open WhatsApp click-to-chat
 - Mark paid and mark part-paid actions
 - Cashflow summary report
+- Downloadable text report
+- CSV export
+- WhatsApp Cloud API setup link
 - Local browser storage
 
 ## Safe Positioning
