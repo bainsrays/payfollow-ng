@@ -725,6 +725,7 @@
         <a href="pricing.html">Pricing</a>
         <a href="app.html">Demo</a>
         <a href="contact.html">Contact</a>
+        <a href="login.html">Login</a>
       </div>
       <div class="nav-actions">
         <a class="btn" href="https://github.com/bainsrays/payfollow-ng" target="_blank" rel="noopener noreferrer">GitHub</a>
@@ -736,7 +737,7 @@
     <div class="section-inner">
       <div class="section-head">
         <h2>Live product demo</h2>
-        <p>Create a demo account, add a business profile, track balances, invite staff, and export reports.</p>
+        <p>Open the login page to create a demo account, then use this app page to manage profiles, balances, staff, reminders, and reports.</p>
       </div>
     </div>
   <main class="shell">
@@ -767,26 +768,19 @@
 
       <section class="panel">
         <div class="toolbar">
-          <h3 style="margin: 0">Business account setup</h3>
+          <h3 style="margin: 0">Business profile setup</h3>
           <span class="status" id="accountStatus">Demo account</span>
         </div>
-        <form class="form" id="authForm">
-          <div class="split">
-            <label>
-              Account email
-              <input id="accountEmail" type="email" value="owner@payfollow.ng" />
-            </label>
-            <label>
-              Account password
-              <input id="accountPassword" type="password" value="demo1234" />
-            </label>
-          </div>
-          <div class="actions">
-            <button class="btn primary" id="createAccount" type="submit">Create account</button>
-            <button class="btn" id="loginAccount" type="button">Login</button>
-          </div>
+        <p class="fine-print">Need to create or sign in to a demo account? Use the dedicated login page first.</p>
+        <div class="actions" style="margin-bottom: 14px">
+          <a class="btn" href="login.html">Open login page</a>
+        </div>
+        <form class="form" id="authForm" style="display: none" aria-hidden="true">
+          <input id="accountEmail" type="email" value="owner@payfollow.ng" />
+          <input id="accountPassword" type="password" value="demo1234" />
+          <button id="createAccount" type="submit">Create account</button>
+          <button id="loginAccount" type="button">Login</button>
         </form>
-        <div class="divider"></div>
         <form class="form" id="accountForm">
           <label>
             Business profile
@@ -1641,4 +1635,8 @@
 
 </body>
 </html>
+
+
+
+
 

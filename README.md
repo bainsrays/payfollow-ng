@@ -47,8 +47,9 @@ A Nigerian fashion seller has money stuck across multiple customers. PayFollow N
 
 - Product landing page
 - Sticky website navigation across multiple pages
-- Separate pages for Home, Features, Pricing, Contact, and App/Demo
+- Separate pages for Home, Features, Pricing, Contact, Login, and App/Demo
 - Feature and pricing pages
+- Dedicated login/create-account demo page
 - Live dashboard demo page
 - Demo business account setup
 - Demo create account and login flow
