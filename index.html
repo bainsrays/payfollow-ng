@@ -31,6 +31,217 @@
 
     button, input, select, textarea { font: inherit; }
 
+    .site-nav {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid rgba(220,229,223,.85);
+      background: rgba(247,250,247,.94);
+      backdrop-filter: blur(14px);
+    }
+
+    .nav-inner,
+    .section-inner {
+      width: min(1180px, calc(100% - 36px));
+      margin: 0 auto;
+    }
+
+    .nav-inner {
+      min-height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .brand.dark .mark {
+      color: #fff;
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      font-size: 14px;
+      font-weight: 850;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+    }
+
+    .nav-links a:hover {
+      color: var(--accent);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .site-section {
+      padding: 64px 0;
+    }
+
+    .hero {
+      min-height: calc(100vh - 72px);
+      display: grid;
+      align-items: end;
+      color: #fff;
+      background:
+        linear-gradient(90deg, rgba(9, 34, 25, .88), rgba(9, 34, 25, .5), rgba(9, 34, 25, .2)),
+        url("https://images.unsplash.com/photo-1556745757-8d76bdb6984b?auto=format&fit=crop&w=1800&q=80") center/cover;
+    }
+
+    .hero .section-inner {
+      padding: 72px 0 52px;
+    }
+
+    .hero-copy {
+      max-width: 760px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 18px;
+      border: 1px solid rgba(255,255,255,.28);
+      border-radius: 999px;
+      padding: 8px 11px;
+      background: rgba(255,255,255,.12);
+      color: rgba(255,255,255,.88);
+      font-size: 13px;
+      font-weight: 850;
+    }
+
+    .hero h1 {
+      margin: 0;
+      max-width: 800px;
+      font-size: clamp(42px, 8vw, 86px);
+      line-height: .95;
+      letter-spacing: 0;
+    }
+
+    .hero p {
+      max-width: 620px;
+      margin: 20px 0 0;
+      color: rgba(255,255,255,.88);
+      font-size: 18px;
+      line-height: 1.55;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .hero-actions .btn {
+      border-color: rgba(255,255,255,.35);
+    }
+
+    .hero-actions .btn:not(.primary) {
+      color: #fff;
+      background: rgba(255,255,255,.12);
+    }
+
+    .hero-strip {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 50px;
+      max-width: 860px;
+    }
+
+    .hero-stat {
+      border: 1px solid rgba(255,255,255,.22);
+      border-radius: 8px;
+      padding: 15px;
+      background: rgba(255,255,255,.12);
+    }
+
+    .hero-stat strong {
+      display: block;
+      font-size: 22px;
+      margin-bottom: 4px;
+    }
+
+    .hero-stat span {
+      color: rgba(255,255,255,.78);
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 18px;
+      margin-bottom: 22px;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      max-width: 640px;
+      font-size: clamp(28px, 4vw, 44px);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+
+    .section-head p {
+      margin: 0;
+      max-width: 430px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .feature-grid,
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .feature,
+    .price-plan {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .feature h3,
+    .price-plan h3 {
+      margin: 0 0 10px;
+      font-size: 18px;
+    }
+
+    .feature p,
+    .price-plan p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 14px;
+    }
+
+    .price-plan strong {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 28px;
+    }
+
+    .demo-shell {
+      padding: 28px 0 0;
+      background: #eef5ef;
+    }
+
     .shell {
       min-height: 100vh;
       display: grid;
@@ -421,6 +632,11 @@
     }
 
     @media (max-width: 1080px) {
+      .feature-grid,
+      .pricing-grid {
+        grid-template-columns: 1fr;
+      }
+
       .shell { grid-template-columns: 1fr; }
       .sidebar {
         min-height: 360px;
@@ -432,6 +648,26 @@
     }
 
     @media (max-width: 860px) {
+      .nav-inner {
+        min-height: auto;
+        padding: 14px 0;
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .nav-links,
+      .nav-actions {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .hero-strip,
+      .section-head {
+        grid-template-columns: 1fr;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
       .metrics,
       .main-grid { grid-template-columns: 1fr; }
       .sidebar { grid-template-columns: 1fr; }
@@ -439,6 +675,33 @@
     }
 
     @media (max-width: 560px) {
+      .nav-links {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .nav-actions {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .hero {
+        min-height: auto;
+      }
+
+      .hero .section-inner {
+        padding: 52px 0 34px;
+      }
+
+      .hero-strip {
+        grid-template-columns: 1fr;
+      }
+
+      .site-section {
+        padding: 44px 0;
+      }
+
       .workspace, .sidebar { padding: 18px; }
       .topbar { flex-direction: column; }
       .badge { white-space: normal; }
@@ -450,6 +713,122 @@
   </style>
 </head>
 <body>
+  <nav class="site-nav">
+    <div class="nav-inner">
+      <a class="brand dark" href="#home" style="color: inherit; text-decoration: none">
+        <div class="mark">PF</div>
+        PayFollow NG
+      </a>
+      <div class="nav-links" aria-label="Primary navigation">
+        <a href="#home">Home</a>
+        <a href="#features">Features</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#demo">Demo</a>
+        <a href="#contact">Contact</a>
+      </div>
+      <div class="nav-actions">
+        <a class="btn" href="https://github.com/bainsrays/payfollow-ng" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a class="btn primary" href="#demo">Open demo</a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="hero" id="home">
+    <div class="section-inner">
+      <div class="hero-copy">
+        <span class="eyebrow">Built for Nigerian small businesses</span>
+        <h1>Stop chasing balances blindly.</h1>
+        <p>PayFollow NG helps business owners track unpaid balances, send polite WhatsApp-ready reminders, manage staff access, and protect cashflow without awkward follow-ups.</p>
+        <div class="hero-actions">
+          <a class="btn primary" href="#demo">Try the live demo</a>
+          <a class="btn" href="#features">See features</a>
+        </div>
+      </div>
+      <div class="hero-strip">
+        <div class="hero-stat">
+          <strong>NGN 420k</strong>
+          <span>Sample unpaid balances tracked in the demo dashboard.</span>
+        </div>
+        <div class="hero-stat">
+          <strong>5 tones</strong>
+          <span>Polite, firm, final, part-payment, and thank-you reminders.</span>
+        </div>
+        <div class="hero-stat">
+          <strong>1 link</strong>
+          <span>Copy a message or open WhatsApp directly from a customer record.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="site-section" id="features">
+    <div class="section-inner">
+      <div class="section-head">
+        <h2>Everything a small business needs to follow money clearly.</h2>
+        <p>PayFollow NG focuses on records, reminders, team access, and reports. No threats. No public shaming. Just organized follow-up.</p>
+      </div>
+      <div class="feature-grid">
+        <article class="feature">
+          <h3>Balance tracking</h3>
+          <p>Add customer balances, due dates, part-payment status, notes, and customer tags so nothing gets forgotten.</p>
+        </article>
+        <article class="feature">
+          <h3>WhatsApp reminders</h3>
+          <p>Generate copy-ready messages for different follow-up situations and open WhatsApp from the dashboard.</p>
+        </article>
+        <article class="feature">
+          <h3>Business profiles</h3>
+          <p>Set up multiple business profiles, switch between them, and keep the dashboard aligned with each business.</p>
+        </article>
+        <article class="feature">
+          <h3>Team access</h3>
+          <p>Prepare staff roles and permissions for owners, support staff, accountants, sales reps, and viewers.</p>
+        </article>
+        <article class="feature">
+          <h3>Exportable reports</h3>
+          <p>Copy reports, download text summaries, and export balances as CSV for offline records.</p>
+        </article>
+        <article class="feature">
+          <h3>API-ready path</h3>
+          <p>Start with click-to-chat today, then connect WhatsApp Cloud API and payment links when the product grows.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="site-section" id="pricing">
+    <div class="section-inner">
+      <div class="section-head">
+        <h2>Simple pricing for a real Nigerian SME market.</h2>
+        <p>The MVP is free for demo. The production model can start small and grow with business usage.</p>
+      </div>
+      <div class="pricing-grid">
+        <article class="price-plan">
+          <h3>Free</h3>
+          <strong>NGN 0</strong>
+          <p>Track up to 10 customer balances and test reminder templates.</p>
+        </article>
+        <article class="price-plan">
+          <h3>Starter</h3>
+          <strong>NGN 2k/mo</strong>
+          <p>Unlimited balances, saved business profiles, reports, and WhatsApp-ready reminders.</p>
+        </article>
+        <article class="price-plan">
+          <h3>Team</h3>
+          <strong>NGN 5k/mo</strong>
+          <p>Staff access, permissions, export controls, and multi-business support.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="demo-shell" id="demo">
+    <div class="section-inner">
+      <div class="section-head">
+        <h2>Live product demo</h2>
+        <p>Create a demo account, add a business profile, track balances, invite staff, and export reports.</p>
+      </div>
+    </div>
   <main class="shell">
     <aside class="sidebar">
       <div>
@@ -737,6 +1116,20 @@
       </section>
     </section>
   </main>
+  </section>
+
+  <section class="site-section" id="contact">
+    <div class="section-inner">
+      <div class="section-head">
+        <h2>Built for business owners tired of “I’ll balance you later.”</h2>
+        <p>Use the demo link for the hackathon now. The next production step is real authentication, database storage, and payment/WhatsApp integrations.</p>
+      </div>
+      <div class="actions">
+        <a class="btn primary" href="#demo">Open demo</a>
+        <a class="btn" href="https://github.com/bainsrays/payfollow-ng" target="_blank" rel="noopener noreferrer">View GitHub</a>
+      </div>
+    </div>
+  </section>
 
   <div class="toast" id="toast">Copied</div>
 

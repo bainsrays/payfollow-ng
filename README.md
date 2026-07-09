@@ -1,6 +1,6 @@
 # PayFollow NG
 
-PayFollow NG is a payment follow-up dashboard for Nigerian small businesses that sell on credit or collect balances later.
+PayFollow NG is a payment follow-up website and dashboard for Nigerian small businesses that sell on credit or collect balances later.
 
 It helps business owners:
 
@@ -9,6 +9,7 @@ It helps business owners:
 - Generate polite WhatsApp-ready reminders
 - Mark balances as unpaid, part-paid, paid, or overdue
 - Copy simple cashflow reports
+- Explain the product through a landing page, navigation, feature sections, and pricing teaser
 
 ## Hackathon MVP
 
@@ -44,6 +45,10 @@ A Nigerian fashion seller has money stuck across multiple customers. PayFollow N
 
 ## Current Features
 
+- Product landing page
+- Sticky website navigation
+- Feature and pricing sections
+- Live demo section
 - Demo business account setup
 - Demo create account and login flow
 - Multiple business profiles
@@ -68,10 +73,9 @@ PayFollow NG is a payment organization and communication tool. It does not haras
 
 ## Next Product Steps
 
-- Add login
+- Replace demo login with real authentication
 - Add cloud database
-- Add business profiles
-- Add team/staff access
 - Add Paystack/Flutterwave payment links
-- Add exportable reports
-- Add mobile-first production UI
+- Add deeper WhatsApp Business API integration
+- Add public marketing pages for FAQs, support, and terms
+- Add mobile-first production UI polish
