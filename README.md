@@ -14,6 +14,18 @@ It helps business owners:
 
 This is a self-contained static MVP built for the Outskill hackathon.
 
+GitHub repository:
+
+```text
+https://github.com/bainsrays/payfollow-ng
+```
+
+Public demo:
+
+```text
+https://bainsrays.github.io/payfollow-ng/
+```
+
 Open locally:
 
 ```text
@@ -56,4 +68,3 @@ PayFollow NG is a payment organization and communication tool. It does not haras
 - Add Paystack/Flutterwave payment links
 - Add exportable reports
 - Add mobile-first production UI
-
