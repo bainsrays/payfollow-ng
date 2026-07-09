@@ -44,6 +44,7 @@ A Nigerian fashion seller has money stuck across multiple customers. PayFollow N
 
 ## Current Features
 
+- Demo business account setup
 - Dashboard metrics
 - Demo Nigerian SME customer balances
 - Add customer balance form

@@ -422,11 +422,67 @@
     <section class="workspace">
       <header class="topbar">
         <div>
-          <h2>Ada's Fashion House Payment Desk</h2>
-          <p>Demo business profile for a Nigerian SME managing credit sales, part payments, and customer follow-ups.</p>
+          <h2 id="workspaceTitle">Ada's Fashion House Payment Desk</h2>
+          <p id="workspaceSubtitle">Demo business profile for a Nigerian SME managing credit sales, part payments, and customer follow-ups.</p>
         </div>
         <span class="badge">Group 73 Hackathon MVP</span>
       </header>
+
+      <section class="panel">
+        <div class="toolbar">
+          <h3 style="margin: 0">Business account setup</h3>
+          <span class="status" id="accountStatus">Demo account</span>
+        </div>
+        <form class="form" id="accountForm">
+          <div class="split">
+            <label>
+              Business name
+              <input id="businessName" value="Ada's Fashion House" />
+            </label>
+            <label>
+              Owner name
+              <input id="ownerName" value="Ada Okafor" />
+            </label>
+          </div>
+          <div class="split">
+            <label>
+              Business type
+              <select id="businessType">
+                <option>Fashion / tailoring</option>
+                <option>Food vendor</option>
+                <option>Beauty / skincare</option>
+                <option>Phone accessories</option>
+                <option>Wholesale / retail</option>
+                <option>Freelance service</option>
+                <option>School / tutor</option>
+                <option>Other small business</option>
+              </select>
+            </label>
+            <label>
+              WhatsApp number
+              <input id="businessPhone" value="08030000000" />
+            </label>
+          </div>
+          <div class="split">
+            <label>
+              City
+              <input id="businessCity" value="Lagos" />
+            </label>
+            <label>
+              Currency
+              <select id="currency">
+                <option value="NGN">NGN - Nigerian naira</option>
+                <option value="USD">USD - US dollar</option>
+                <option value="GBP">GBP - British pound</option>
+              </select>
+            </label>
+          </div>
+          <div class="actions">
+            <button class="btn primary" type="submit">Create demo account</button>
+            <button class="btn" id="loadSampleAccount" type="button">Load sample account</button>
+          </div>
+        </form>
+      </section>
 
       <section class="metrics">
         <div class="metric">
@@ -567,11 +623,18 @@
     const isoToday = today.toISOString().slice(0, 10);
     const dayMs = 24 * 60 * 60 * 1000;
 
-    const formatter = new Intl.NumberFormat("en-NG", {
-      style: "currency",
+    const defaultProfile = {
+      businessName: "Ada's Fashion House",
+      ownerName: "Ada Okafor",
+      businessType: "Fashion / tailoring",
+      businessPhone: "08030000000",
+      businessCity: "Lagos",
       currency: "NGN",
-      maximumFractionDigits: 0
-    });
+      created: false
+    };
+
+    let profile = loadProfile();
+    let formatter = createFormatter(profile.currency);
 
     const demoBalances = [
       {
@@ -641,6 +704,47 @@
 
     document.getElementById("dueDate").value = isoToday;
 
+    function createFormatter(currency) {
+      const locale = currency === "NGN" ? "en-NG" : "en-US";
+      return new Intl.NumberFormat(locale, {
+        style: "currency",
+        currency,
+        maximumFractionDigits: 0
+      });
+    }
+
+    function loadProfile() {
+      try {
+        const saved = localStorage.getItem("payfollow:profile");
+        return saved ? { ...defaultProfile, ...JSON.parse(saved) } : { ...defaultProfile };
+      } catch {
+        return { ...defaultProfile };
+      }
+    }
+
+    function saveProfile() {
+      localStorage.setItem("payfollow:profile", JSON.stringify(profile));
+    }
+
+    function syncProfileForm() {
+      document.getElementById("businessName").value = profile.businessName;
+      document.getElementById("ownerName").value = profile.ownerName;
+      document.getElementById("businessType").value = profile.businessType;
+      document.getElementById("businessPhone").value = profile.businessPhone;
+      document.getElementById("businessCity").value = profile.businessCity;
+      document.getElementById("currency").value = profile.currency;
+    }
+
+    function renderProfile() {
+      formatter = createFormatter(profile.currency);
+      document.getElementById("workspaceTitle").textContent = `${profile.businessName} Payment Desk`;
+      document.getElementById("workspaceSubtitle").textContent =
+        `${profile.ownerName} • ${profile.businessType} • ${profile.businessCity} • ${profile.businessPhone}`;
+      const accountStatus = document.getElementById("accountStatus");
+      accountStatus.textContent = profile.created ? "Account set up" : "Demo account";
+      accountStatus.className = `status ${profile.created ? "" : "part"}`;
+    }
+
     function loadBalances() {
       try {
         const saved = localStorage.getItem("payfollow:balances");
@@ -672,6 +776,7 @@
     }
 
     function render() {
+      renderProfile();
       const filter = document.getElementById("filter").value;
       const visible = balances.filter(balance => filter === "all" || balance.status === filter);
       const list = document.getElementById("customerList");
@@ -755,7 +860,7 @@
       const top = [...open].sort((a, b) => b.amount - a.amount)[0];
 
       document.getElementById("report").textContent =
-        `Ada's Fashion House has ${money(total)} still unpaid across ${open.length} customers. ` +
+        `${profile.businessName} has ${money(total)} still unpaid across ${open.length} customers. ` +
         `${overdue.length} balances are overdue and ${dueNow.length} need follow-up today. ` +
         `${top ? `The largest open balance is ${money(top.amount)} from ${top.name} for ${top.item}. ` : ""}` +
         `Recommended action: message overdue customers first, then follow up on today's balances before closing.`;
@@ -812,6 +917,30 @@
       showToast("Balance added");
     });
 
+    document.getElementById("accountForm").addEventListener("submit", event => {
+      event.preventDefault();
+      profile = {
+        businessName: document.getElementById("businessName").value.trim() || defaultProfile.businessName,
+        ownerName: document.getElementById("ownerName").value.trim() || defaultProfile.ownerName,
+        businessType: document.getElementById("businessType").value,
+        businessPhone: document.getElementById("businessPhone").value.trim() || defaultProfile.businessPhone,
+        businessCity: document.getElementById("businessCity").value.trim() || defaultProfile.businessCity,
+        currency: document.getElementById("currency").value,
+        created: true
+      };
+      saveProfile();
+      render();
+      showToast("Demo account created");
+    });
+
+    document.getElementById("loadSampleAccount").addEventListener("click", () => {
+      profile = { ...defaultProfile, created: true };
+      syncProfileForm();
+      saveProfile();
+      render();
+      showToast("Sample account loaded");
+    });
+
     document.getElementById("filter").addEventListener("change", render);
     document.getElementById("tone").addEventListener("change", renderMessage);
     document.getElementById("copyMessage").addEventListener("click", () => {
@@ -853,14 +982,17 @@
     });
     document.getElementById("resetDemo").addEventListener("click", () => {
       localStorage.removeItem("payfollow:balances");
+      localStorage.removeItem("payfollow:profile");
       balances = demoBalances;
+      profile = { ...defaultProfile };
       selectedId = balances[0].id;
+      syncProfileForm();
       render();
       showToast("Demo reset");
     });
 
+    syncProfileForm();
     render();
   </script>
 </body>
 </html>
-
