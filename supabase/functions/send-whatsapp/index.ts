@@ -40,6 +40,35 @@ function requireEnv(name: string) {
   return value;
 }
 
+function buildTemplateMessage(templateName: string, language: string, phone: string, payload: SendPayload, balance: Record<string, unknown> | null) {
+  const template: Record<string, unknown> = {
+    name: templateName,
+    language: { code: language }
+  };
+
+  if (templateName !== "hello_world") {
+    template.components = [
+      {
+        type: "body",
+        parameters: [
+          { type: "text", text: String(payload.customerName || balance?.customer_name || "customer") },
+          { type: "text", text: String(payload.businessName || "PayFollow NG") },
+          { type: "text", text: String(balance?.amount || "") },
+          { type: "text", text: String(balance?.item || "") },
+          { type: "text", text: String(balance?.due_date || "") }
+        ]
+      }
+    ];
+  }
+
+  return {
+    messaging_product: "whatsapp",
+    to: phone,
+    type: "template",
+    template
+  };
+}
+
 Deno.serve(async (request) => {
   if (request.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
   if (request.method !== "POST") return jsonResponse({ error: "Method not allowed" }, 405);
@@ -49,7 +78,7 @@ Deno.serve(async (request) => {
     const supabaseAnonKey = requireEnv("SUPABASE_ANON_KEY");
     const metaToken = requireEnv("META_WHATSAPP_TOKEN");
     const phoneNumberId = requireEnv("META_WHATSAPP_PHONE_NUMBER_ID");
-    const apiVersion = Deno.env.get("META_WHATSAPP_API_VERSION") || "v20.0";
+    const apiVersion = Deno.env.get("META_WHATSAPP_API_VERSION") || "v25.0";
     const templateName = Deno.env.get("WHATSAPP_TEMPLATE_NAME") || "";
     const templateLanguage = Deno.env.get("WHATSAPP_TEMPLATE_LANGUAGE") || "en";
 
@@ -80,27 +109,7 @@ Deno.serve(async (request) => {
     }
 
     const metaBody = templateName
-      ? {
-          messaging_product: "whatsapp",
-          to: phone,
-          type: "template",
-          template: {
-            name: templateName,
-            language: { code: templateLanguage },
-            components: [
-              {
-                type: "body",
-                parameters: [
-                  { type: "text", text: String(payload.customerName || balance?.customer_name || "customer") },
-                  { type: "text", text: String(payload.businessName || "PayFollow NG") },
-                  { type: "text", text: String(balance?.amount || "") },
-                  { type: "text", text: String(balance?.item || "") },
-                  { type: "text", text: String(balance?.due_date || "") }
-                ]
-              }
-            ]
-          }
-        }
+      ? buildTemplateMessage(templateName, templateLanguage, phone, payload, balance)
       : {
           messaging_product: "whatsapp",
           to: phone,
@@ -121,7 +130,11 @@ Deno.serve(async (request) => {
     });
     const metaResult = await metaResponse.json();
     if (!metaResponse.ok) {
-      return jsonResponse({ error: "Meta WhatsApp API rejected the message", meta: metaResult }, 400);
+      return jsonResponse({
+        error: "Meta WhatsApp API rejected the message",
+        meta: metaResult,
+        hint: "For test mode, add the recipient number in Meta and use a valid generated token. For production reminders, use an approved WhatsApp template."
+      }, 400);
     }
 
     if (balance?.business_id) {

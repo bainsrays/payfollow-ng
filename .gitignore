@@ -12,10 +12,10 @@ Thumbs.db
 # Environment and secrets
 .env
 .env.*
+supabase/.temp/
 
 # Dependencies/build output for future app conversion
 node_modules/
 dist/
 build/
 .next/
-

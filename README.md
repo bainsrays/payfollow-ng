@@ -113,7 +113,8 @@ Required Supabase secrets:
 ```text
 META_WHATSAPP_TOKEN=Meta permanent or system-user access token
 META_WHATSAPP_PHONE_NUMBER_ID=WhatsApp Cloud API phone number ID
-META_WHATSAPP_API_VERSION=v20.0
+META_WHATSAPP_API_VERSION=v25.0
+META_WHATSAPP_WEBHOOK_VERIFY_TOKEN=Shared verification token used in Meta webhook setup
 ```
 
 Optional template mode:
@@ -127,7 +128,15 @@ Deploy with the Supabase CLI:
 
 ```text
 npx supabase functions deploy send-whatsapp --project-ref ngbryxkutijvmujnmija
-npx supabase secrets set META_WHATSAPP_TOKEN=... META_WHATSAPP_PHONE_NUMBER_ID=... META_WHATSAPP_API_VERSION=v20.0 --project-ref ngbryxkutijvmujnmija
+npx supabase functions deploy whatsapp-webhook --project-ref ngbryxkutijvmujnmija --no-verify-jwt
+npx supabase secrets set META_WHATSAPP_TOKEN=... META_WHATSAPP_PHONE_NUMBER_ID=... META_WHATSAPP_API_VERSION=v25.0 META_WHATSAPP_WEBHOOK_VERIFY_TOKEN=... --project-ref ngbryxkutijvmujnmija
 ```
 
 Meta usually requires approved templates for business-initiated reminders outside the 24-hour customer-service window. Use click-to-chat for immediate launch, then switch the function to an approved template for production API sends.
+
+Meta webhook setup:
+
+```text
+Callback URL: https://ngbryxkutijvmujnmija.functions.supabase.co/whatsapp-webhook
+Verify token: use the same value stored in META_WHATSAPP_WEBHOOK_VERIFY_TOKEN
+```
