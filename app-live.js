@@ -150,6 +150,15 @@
     return state.liveBalances.find(balance => balance.id === id) || state.liveBalances[0] || null;
   }
 
+  function normalizeWhatsAppNumber(value) {
+    let digits = String(value || "").replace(/\D/g, "");
+    if (digits.startsWith("00")) digits = digits.slice(2);
+    if (digits.startsWith("234")) return digits;
+    if (digits.startsWith("0")) return `234${digits.slice(1)}`;
+    if (digits.length === 10) return `234${digits}`;
+    return digits;
+  }
+
   async function recordActivity(action, entityType, entityId, note) {
     if (!hasSupabase || !state.businessId) return;
     await client.from("activity_logs").insert({
@@ -206,6 +215,65 @@
       `${balance.name} marked ${status === "paid" ? "paid" : "part-paid"}`
     );
     showStatus(status === "paid" ? "Paid status saved live" : "Part-payment saved live");
+    await loadLiveData();
+  }
+
+  async function sendSelectedWhatsAppReminder() {
+    if (!hasSupabase) {
+      showStatus("Supabase is required for API send");
+      return;
+    }
+
+    const { data: sessionData } = await client.auth.getSession();
+    const accessToken = sessionData.session?.access_token;
+    if (!accessToken) {
+      showStatus("Login required for API send");
+      return;
+    }
+
+    const balance = selectedBalance();
+    if (!balance) {
+      showStatus("Choose a customer first");
+      return;
+    }
+
+    const phone = normalizeWhatsAppNumber(balance.phone);
+    const message = input("messageText")?.textContent?.trim() || "";
+    if (!phone) {
+      showStatus("Add customer WhatsApp number first");
+      return;
+    }
+    if (!message) {
+      showStatus("Generate a reminder message first");
+      return;
+    }
+
+    showStatus("Sending WhatsApp API message...");
+    const response = await fetch(`${config.supabaseUrl}/functions/v1/send-whatsapp`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        apikey: config.supabaseAnonKey,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        balanceId: balance.id,
+        customerName: balance.name,
+        phone,
+        message,
+        businessName: input("businessName")?.value || "PayFollow NG",
+        tone: input("tone")?.value || "polite"
+      })
+    });
+
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok || result.error) {
+      const metaMessage = result?.meta?.error?.message;
+      showStatus(metaMessage || result.hint || result.error || "WhatsApp API send failed");
+      return;
+    }
+
+    showStatus(result.providerMessageId ? "WhatsApp API message sent" : "WhatsApp API request sent");
     await loadLiveData();
   }
 
@@ -350,11 +418,23 @@
     input("saveBusinessProfile")?.addEventListener("click", saveLiveProfile, true);
     input("balanceForm")?.addEventListener("submit", addLiveBalance, true);
     input("staffForm")?.addEventListener("submit", addLiveStaff, true);
-    input("markPaid")?.addEventListener("click", () => {
+    input("markPaid")?.addEventListener("click", event => {
+      if (!state.businessId) return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
       updateSelectedBalanceStatus("paid").catch(error => showStatus(error.message || "Paid update failed"));
     }, true);
-    input("markPart")?.addEventListener("click", () => {
+    input("markPart")?.addEventListener("click", event => {
+      if (!state.businessId) return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
       updateSelectedBalanceStatus("part").catch(error => showStatus(error.message || "Part-payment update failed"));
+    }, true);
+    input("sendWhatsappApi")?.addEventListener("click", event => {
+      if (!hasSupabase) return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      sendSelectedWhatsAppReminder().catch(error => showStatus(error.message || "WhatsApp API send failed"));
     }, true);
     input("openWhatsApp")?.addEventListener("click", () => {
       logClickToChatReminder().catch(error => showStatus(error.message || "Reminder log failed"));
