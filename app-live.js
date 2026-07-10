@@ -141,6 +141,99 @@
     });
   }
 
+  function selectedBalanceId() {
+    return document.querySelector(".customer-row.active")?.dataset?.balanceId || state.liveBalances[0]?.id || null;
+  }
+
+  function selectedBalance() {
+    const id = selectedBalanceId();
+    return state.liveBalances.find(balance => balance.id === id) || state.liveBalances[0] || null;
+  }
+
+  async function recordActivity(action, entityType, entityId, note) {
+    if (!hasSupabase || !state.businessId) return;
+    await client.from("activity_logs").insert({
+      business_id: state.businessId,
+      action,
+      entity_type: entityType,
+      entity_id: entityId,
+      note
+    });
+  }
+
+  async function recordPaymentEvent(balance, eventType, amount, note) {
+    if (!hasSupabase || !state.businessId || !balance) return;
+    await client.from("payment_history").insert({
+      business_id: state.businessId,
+      balance_id: balance.id,
+      customer_name: balance.name,
+      amount,
+      event_type: eventType,
+      note
+    });
+  }
+
+  async function updateSelectedBalanceStatus(status) {
+    if (!hasSupabase || !state.businessId) return;
+    const balance = selectedBalance();
+    if (!balance) return;
+
+    const update = status === "paid"
+      ? { status: "paid", amount: 0, tag: "Payment completed" }
+      : { status: "part", tag: "Part-payment customer" };
+
+    const { error } = await client
+      .from("customer_balances")
+      .update(update)
+      .eq("id", balance.id)
+      .eq("business_id", state.businessId);
+
+    if (error) {
+      showStatus(status === "paid" ? "Paid update failed" : "Part-payment update failed");
+      return;
+    }
+
+    await recordPaymentEvent(
+      balance,
+      status === "paid" ? "paid" : "part_payment",
+      status === "paid" ? balance.amount : 0,
+      status === "paid" ? "Marked paid from dashboard" : "Marked part-paid from dashboard"
+    );
+    await recordActivity(
+      status === "paid" ? "marked_paid" : "marked_part_paid",
+      "customer_balance",
+      balance.id,
+      `${balance.name} marked ${status === "paid" ? "paid" : "part-paid"}`
+    );
+    showStatus(status === "paid" ? "Paid status saved live" : "Part-payment saved live");
+    await loadLiveData();
+  }
+
+  async function logClickToChatReminder() {
+    if (!hasSupabase || !state.businessId) return;
+    const balance = selectedBalance();
+    const message = input("messageText")?.textContent || "";
+    if (!balance || !message.trim()) return;
+
+    await client.from("whatsapp_reminders").insert({
+      business_id: state.businessId,
+      balance_id: balance.id,
+      customer_name: balance.name,
+      customer_phone: balance.phone || "",
+      message,
+      delivery_mode: "click_to_chat",
+      status: "sent",
+      provider_response: { source: "wa.me" }
+    });
+    await recordActivity(
+      "opened_whatsapp_reminder",
+      "customer_balance",
+      balance.id,
+      `WhatsApp reminder opened for ${balance.name}`
+    );
+    showStatus("WhatsApp reminder logged");
+  }
+
   async function loadLiveData() {
     if (!hasSupabase) {
       showStatus("Add Supabase anon key");
@@ -183,7 +276,6 @@
     state.liveBalances = (balances || []).map(mapBalance);
     state.liveStaff = staff || [];
     publishLiveData(liveProfile);
-    renderLiveBalances();
     renderLiveStaff();
   }
 
@@ -258,8 +350,17 @@
     input("saveBusinessProfile")?.addEventListener("click", saveLiveProfile, true);
     input("balanceForm")?.addEventListener("submit", addLiveBalance, true);
     input("staffForm")?.addEventListener("submit", addLiveStaff, true);
+    input("markPaid")?.addEventListener("click", () => {
+      updateSelectedBalanceStatus("paid").catch(error => showStatus(error.message || "Paid update failed"));
+    }, true);
+    input("markPart")?.addEventListener("click", () => {
+      updateSelectedBalanceStatus("part").catch(error => showStatus(error.message || "Part-payment update failed"));
+    }, true);
+    input("openWhatsApp")?.addEventListener("click", () => {
+      logClickToChatReminder().catch(error => showStatus(error.message || "Reminder log failed"));
+    }, true);
     input("filter")?.addEventListener("change", () => {
-      if (hasSupabase && state.businessId) renderLiveBalances();
+      if (hasSupabase && state.businessId) publishLiveData();
     }, true);
     loadLiveData().catch(error => showStatus(error.message || "Supabase check failed"));
   });

@@ -1367,6 +1367,7 @@
       visible.forEach(balance => {
         const row = document.createElement("article");
         row.className = `customer-row ${balance.id === selectedId ? "active" : ""}`;
+        row.dataset.balanceId = balance.id;
         row.innerHTML = `
           <div>
             <h4>${balance.name}</h4>
