@@ -1,909 +1,156 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
-  <title>PayFollow NG by Dynamic Fix LLC | Track Customer Balances and WhatsApp Payment Reminders</title>
-  <meta name="description" content="PayFollow NG helps Nigerian small businesses track unpaid customer balances, send WhatsApp-ready reminders, manage credit sales, and recover money with confidence." />
-  <meta name="keywords" content="PayFollow NG, Nigerian small business payment tracker, customer debt tracker Nigeria, balance reminder app, WhatsApp payment reminder, credit sales tracker, SME cashflow Nigeria" />
-  <meta name="robots" content="index, follow" />
+  <link rel="stylesheet" href="styles.css" />
+  <title>PayFollow NG by Dynamic Fix LLC | Customer Balance and WhatsApp Follow-up Desk</title>
+  <meta name="description" content="PayFollow NG helps Nigerian SMEs track unpaid customer balances, send WhatsApp-ready reminders, manage staff follow-up, and protect daily cashflow." />
   <link rel="canonical" href="https://payfollowng.com/" />
-  <meta property="og:title" content="PayFollow NG - Stop chasing balances blindly" />
-  <meta property="og:description" content="A cashflow assistant for Nigerian SMEs that tracks who owes, what is overdue, and helps businesses follow up on WhatsApp." />
-  <meta property="og:url" content="https://payfollowng.com/" />
-  <meta property="og:type" content="website" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "PayFollow NG",
-    "publisher": {
-      "@type": "Organization",
-      "name": "Dynamic Fix LLC",
-      "addressCountry": "NG"
-    },
-    "applicationCategory": "BusinessApplication",
-    "operatingSystem": "Web",
-    "url": "https://payfollowng.com/",
-    "description": "PayFollow NG helps Nigerian small businesses track unpaid balances, send WhatsApp-ready reminders, and manage credit sales follow-up.",
-    "offers": {
-      "@type": "Offer",
-      "priceCurrency": "NGN",
-      "price": "0"
-    }
-  }
-  </script>
-  <style>
-    :root {
-      --ink: #17211d;
-      --muted: #66736d;
-      --line: #dce5df;
-      --paper: #f7faf7;
-      --panel: #ffffff;
-      --soft: #edf5ef;
-      --accent: #126c4a;
-      --accent-2: #df8f2d;
-      --danger: #b93a32;
-      --blue: #285f9d;
-      --shadow: 0 20px 50px rgba(23, 33, 29, .08);
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      color: var(--ink);
-      background: var(--paper);
-      letter-spacing: 0;
-    }
-
-    button, input, select, textarea { font: inherit; }
-
-    .site-nav {
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      border-bottom: 1px solid rgba(220,229,223,.85);
-      background: rgba(247,250,247,.94);
-      backdrop-filter: blur(14px);
-    }
-
-    .nav-inner,
-    .section-inner {
-      width: min(1180px, calc(100% - 36px));
-      margin: 0 auto;
-    }
-
-    .nav-inner {
-      min-height: 72px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-    }
-
-    .brand.dark .mark {
-      color: #fff;
-      background: var(--accent);
-      border-color: var(--accent);
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-      font-size: 14px;
-      font-weight: 850;
-    }
-
-    .nav-links a {
-      color: var(--muted);
-      text-decoration: none;
-    }
-
-    .nav-links a:hover {
-      color: var(--accent);
-    }
-    .nav-auth {
-      position: relative;
-    }
-
-    .nav-auth summary {
-      list-style: none;
-      cursor: pointer;
-      color: var(--muted);
-      font-weight: 850;
-      outline: none;
-    }
-
-    .nav-auth summary::-webkit-details-marker {
-      display: none;
-    }
-
-    .nav-auth summary::after {
-      content: "";
-      font-size: 11px;
-      color: var(--accent);
-    }
-
-    .nav-auth[open] summary,
-    .nav-auth summary:hover {
-      color: var(--accent);
-    }
-
-    .auth-menu {
-      position: absolute;
-      right: 0;
-      top: 30px;
-      width: 220px;
-      display: grid;
-      gap: 8px;
-      padding: 10px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--panel);
-      box-shadow: var(--shadow);
-      z-index: 40;
-    }
-
-    .auth-menu a {
-      display: block;
-      padding: 10px 12px;
-      border-radius: 8px;
-      color: var(--ink);
-      text-decoration: none;
-      background: var(--paper);
-    }
-
-    .auth-menu a:hover {
-      background: var(--soft);
-      color: var(--accent);
-    }
-.nav-actions {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .site-section {
-      padding: 64px 0;
-    }
-
-    .hero {
-      min-height: calc(100vh - 72px);
-      display: grid;
-      align-items: end;
-      color: #fff;
-      background:
-        linear-gradient(90deg, rgba(9, 34, 25, .88), rgba(9, 34, 25, .5), rgba(9, 34, 25, .2)),
-        url("https://images.unsplash.com/photo-1556745757-8d76bdb6984b?auto=format&fit=crop&w=1800&q=80") center/cover;
-    }
-
-    .hero .section-inner {
-      padding: 72px 0 52px;
-    }
-
-    .hero-copy {
-      max-width: 760px;
-    }
-
-    .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 18px;
-      border: 1px solid rgba(255,255,255,.28);
-      border-radius: 999px;
-      padding: 8px 11px;
-      background: rgba(255,255,255,.12);
-      color: rgba(255,255,255,.88);
-      font-size: 13px;
-      font-weight: 850;
-    }
-
-    .hero h1 {
-      margin: 0;
-      max-width: 800px;
-      font-size: clamp(42px, 8vw, 86px);
-      line-height: .95;
-      letter-spacing: 0;
-    }
-
-    .hero p {
-      max-width: 620px;
-      margin: 20px 0 0;
-      color: rgba(255,255,255,.88);
-      font-size: 18px;
-      line-height: 1.55;
-    }
-
-    .hero-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 28px;
-    }
-
-    .hero-actions .btn {
-      border-color: rgba(255,255,255,.35);
-    }
-
-    .hero-actions .btn:not(.primary) {
-      color: #fff;
-      background: rgba(255,255,255,.12);
-    }
-
-    .hero-strip {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 50px;
-      max-width: 860px;
-    }
-
-    .hero-stat {
-      border: 1px solid rgba(255,255,255,.22);
-      border-radius: 8px;
-      padding: 15px;
-      background: rgba(255,255,255,.12);
-    }
-
-    .hero-stat strong {
-      display: block;
-      font-size: 22px;
-      margin-bottom: 4px;
-    }
-
-    .hero-stat span {
-      color: rgba(255,255,255,.78);
-      font-size: 13px;
-      line-height: 1.35;
-    }
-
-    .section-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: end;
-      gap: 18px;
-      margin-bottom: 22px;
-    }
-
-    .section-head h2 {
-      margin: 0;
-      max-width: 640px;
-      font-size: clamp(28px, 4vw, 44px);
-      line-height: 1.05;
-      letter-spacing: 0;
-    }
-
-    .section-head p {
-      margin: 0;
-      max-width: 430px;
-      color: var(--muted);
-      line-height: 1.55;
-    }
-
-    .feature-grid,
-    .pricing-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px;
-    }
-
-    .feature,
-    .price-plan {
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--panel);
-      padding: 18px;
-      box-shadow: var(--shadow);
-    }
-
-    .feature h3,
-    .price-plan h3 {
-      margin: 0 0 10px;
-      font-size: 18px;
-    }
-
-    .feature p,
-    .price-plan p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.55;
-      font-size: 14px;
-    }
-
-    .price-plan strong {
-      display: block;
-      margin-bottom: 10px;
-      font-size: 28px;
-    }
-
-    .demo-shell {
-      padding: 28px 0 0;
-      background: #eef5ef;
-    }
-
-    .shell {
-      min-height: 100vh;
-      display: grid;
-      grid-template-columns: 280px minmax(0, 1fr);
-    }
-
-    .sidebar {
-      min-height: 100vh;
-      padding: 24px;
-      color: #fff;
-      background:
-        linear-gradient(rgba(11, 50, 35, .86), rgba(11, 50, 35, .92)),
-        url("https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=900&q=80") center/cover;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      gap: 28px;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 20px;
-      font-weight: 850;
-    }
-
-    .mark {
-      width: 36px;
-      height: 36px;
-      display: grid;
-      place-items: center;
-      border-radius: 8px;
-      background: rgba(255,255,255,.14);
-      border: 1px solid rgba(255,255,255,.25);
-      font-size: 14px;
-    }
-
-    .sidebar h1 {
-      margin: 0;
-      max-width: 220px;
-      font-size: 38px;
-      line-height: 1;
-      letter-spacing: 0;
-    }
-
-    .sidebar p {
-      margin: 14px 0 0;
-      max-width: 220px;
-      color: rgba(255,255,255,.82);
-      line-height: 1.55;
-    }
-
-    .sidebar-note {
-      display: grid;
-      gap: 8px;
-      color: rgba(255,255,255,.78);
-      font-size: 13px;
-      line-height: 1.45;
-    }
-
-    .workspace {
-      padding: 24px;
-      display: grid;
-      gap: 20px;
-      align-content: start;
-    }
-
-    .topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 16px;
-    }
-
-    .topbar h2 {
-      margin: 0;
-      font-size: 24px;
-      line-height: 1.2;
-    }
-
-    .topbar p {
-      margin: 6px 0 0;
-      color: var(--muted);
-      line-height: 1.45;
-    }
-
-    .badge {
-      white-space: nowrap;
-      border: 1px solid rgba(18,108,74,.2);
-      color: var(--accent);
-      background: rgba(18,108,74,.08);
-      border-radius: 999px;
-      padding: 8px 10px;
-      font-size: 13px;
-      font-weight: 800;
-    }
-
-    .metrics {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 12px;
-    }
-
-    .metric,
-    .panel,
-    .customer-row,
-    .message-box {
-      border: 1px solid var(--line);
-      background: var(--panel);
-      border-radius: 8px;
-    }
-
-    .metric {
-      padding: 16px;
-      min-height: 94px;
-      display: grid;
-      gap: 8px;
-    }
-
-    .metric span {
-      color: var(--muted);
-      font-size: 12px;
-      font-weight: 800;
-      text-transform: uppercase;
-    }
-
-    .metric strong {
-      font-size: 24px;
-      line-height: 1;
-    }
-
-    .metric small {
-      color: var(--muted);
-      line-height: 1.35;
-    }
-
-    .main-grid {
-      display: grid;
-      grid-template-columns: minmax(320px, 420px) minmax(0, 1fr);
-      gap: 18px;
-      align-items: start;
-    }
-
-    .panel {
-      padding: 18px;
-      box-shadow: var(--shadow);
-    }
-
-    .panel h3 {
-      margin: 0 0 12px;
-      font-size: 17px;
-    }
-
-    .form {
-      display: grid;
-      gap: 12px;
-    }
-
-    label {
-      display: grid;
-      gap: 7px;
-      color: var(--muted);
-      font-size: 13px;
-      font-weight: 800;
-    }
-
-    input, select, textarea {
-      width: 100%;
-      border: 1px solid var(--line);
-      border-radius: 6px;
-      padding: 11px 12px;
-      color: var(--ink);
-      background: #fff;
-      outline-color: rgba(18,108,74,.35);
-    }
-
-    textarea {
-      min-height: 82px;
-      resize: vertical;
-    }
-
-    .split {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    .actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .btn {
-      border: 1px solid var(--line);
-      border-radius: 6px;
-      padding: 11px 13px;
-      background: #fff;
-      color: var(--ink);
-      font-weight: 850;
-      cursor: pointer;
-    }
-
-    .btn.primary {
-      border-color: var(--accent);
-      color: #fff;
-      background: var(--accent);
-    }
-
-    .btn.warning {
-      border-color: rgba(223,143,45,.3);
-      color: #5c3510;
-      background: rgba(223,143,45,.12);
-    }
-
-    .btn:active { transform: translateY(1px); }
-
-    .toolbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 12px;
-    }
-
-    .toolbar select {
-      max-width: 180px;
-    }
-
-    .customer-list {
-      display: grid;
-      gap: 10px;
-    }
-
-    .customer-row {
-      padding: 14px;
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 12px;
-      cursor: pointer;
-    }
-
-    .customer-row.active {
-      border-color: rgba(18,108,74,.5);
-      background: rgba(18,108,74,.05);
-    }
-
-    .customer-row h4 {
-      margin: 0 0 5px;
-      font-size: 15px;
-    }
-
-    .customer-row p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.35;
-      font-size: 13px;
-    }
-
-    .amount {
-      text-align: right;
-      display: grid;
-      align-content: start;
-      gap: 7px;
-      font-weight: 850;
-    }
-
-    .status {
-      justify-self: end;
-      width: max-content;
-      border-radius: 999px;
-      padding: 5px 8px;
-      font-size: 11px;
-      font-weight: 850;
-      color: var(--accent);
-      background: rgba(18,108,74,.1);
-    }
-
-    .status.overdue {
-      color: var(--danger);
-      background: rgba(185,58,50,.1);
-    }
-
-    .status.part {
-      color: var(--blue);
-      background: rgba(40,95,157,.1);
-    }
-
-    .status.paid {
-      color: var(--muted);
-      background: var(--soft);
-    }
-
-    .message-box {
-      padding: 16px;
-      min-height: 180px;
-      display: grid;
-      gap: 14px;
-      align-content: start;
-    }
-
-    .message-text {
-      white-space: pre-wrap;
-      color: var(--ink);
-      line-height: 1.55;
-      background: var(--paper);
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 14px;
-      min-height: 124px;
-    }
-
-    .report {
-      margin-top: 14px;
-      color: var(--muted);
-      line-height: 1.55;
-      font-size: 14px;
-    }
-
-    .mini-list {
-      display: grid;
-      gap: 9px;
-      margin-top: 12px;
-    }
-
-    .mini-row {
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--paper);
-      padding: 11px 12px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.35;
-    }
-
-    .mini-row strong {
-      display: block;
-      color: var(--ink);
-      font-size: 14px;
-    }
-
-    .link-row {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 12px;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .link-row a {
-      color: var(--accent);
-      font-weight: 850;
-      text-decoration: none;
-    }
-
-    .divider {
-      height: 1px;
-      background: var(--line);
-      margin: 4px 0;
-    }
-
-    .toast {
-      position: fixed;
-      right: 18px;
-      bottom: 18px;
-      background: var(--ink);
-      color: #fff;
-      border-radius: 8px;
-      padding: 11px 13px;
-      opacity: 0;
-      transform: translateY(10px);
-      transition: .2s ease;
-      pointer-events: none;
-      font-weight: 800;
-      font-size: 13px;
-    }
-
-    .toast.show {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    @media (max-width: 1080px) {
-      .feature-grid,
-      .pricing-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .shell { grid-template-columns: 1fr; }
-      .sidebar {
-        min-height: 360px;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        align-items: end;
-      }
-      .sidebar-note { justify-self: end; }
-    }
-
-    @media (max-width: 860px) {
-      .nav-inner {
-        min-height: auto;
-        padding: 14px 0;
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .nav-links,
-.nav-actions {
-        width: 100%;
-        justify-content: space-between;
-      }
-
-      .hero-strip,
-      .section-head {
-        grid-template-columns: 1fr;
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .metrics,
-      .main-grid { grid-template-columns: 1fr; }
-      .sidebar { grid-template-columns: 1fr; }
-      .sidebar-note { justify-self: start; }
-    }
-
-    @media (max-width: 560px) {
-      .nav-links {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 10px;
-      }
-.nav-actions {
-        align-items: stretch;
-        flex-direction: column;
-      }
-
-      .hero {
-        min-height: auto;
-      }
-
-      .hero .section-inner {
-        padding: 52px 0 34px;
-      }
-
-      .hero-strip {
-        grid-template-columns: 1fr;
-      }
-
-      .site-section {
-        padding: 44px 0;
-      }
-
-      .workspace, .sidebar { padding: 18px; }
-      .topbar { flex-direction: column; }
-      .badge { white-space: normal; }
-      .split { grid-template-columns: 1fr; }
-      .customer-row { grid-template-columns: 1fr; }
-      .amount { text-align: left; }
-      .status { justify-self: start; }
-    }
-  </style>
 </head>
 <body>
-<nav class="site-nav">
-    <div class="nav-inner">
-      <a class="brand dark" href="index.html" style="color: inherit; text-decoration: none">
-        <div class="mark">PF</div>
-        PayFollow NG
-      </a>
-      <div class="nav-links" aria-label="Primary navigation">
-        <a href="index.html">Home</a>
+  <nav class="site-nav">
+    <div class="shell nav-inner">
+      <a class="brand" href="index.html"><span class="brand-mark">PF</span><span>PayFollow NG</span></a>
+      <div class="nav-links">
         <a href="features.html">Features</a>
         <a href="pricing.html">Pricing</a>
-        <a href="app.html">Dashboard</a>
+        <a href="faq.html">FAQ</a>
         <a href="contact.html">Contact</a>
-        <details class="nav-auth">
-          <summary>Login</summary>
-          <div class="auth-menu">
-            <a href="login.html">Create account</a>
-            <a href="login.html?mode=signin">Sign in</a>
-            <a href="app.html">Open dashboard</a>
-          </div>
-        </details>
+        <a href="app.html">Dashboard</a>
       </div>
       <div class="nav-actions">
-        <a class="btn primary" href="login.html">Get started</a>
+        <a class="btn btn-ghost" href="login.html">Login</a>
+        <a class="btn btn-primary" href="login.html">Create account</a>
       </div>
     </div>
   </nav>
-<section class="hero" id="home">
-    <div class="section-inner">
-      <div class="hero-copy">
-        <span class="eyebrow">Built for Nigerian small businesses</span>
-        <h1>Stop chasing balances blindly.</h1>
-        <p>Customer said "I'll balance you later" again? PayFollow NG helps business owners track unpaid balances, send WhatsApp-ready reminders, manage staff access, and protect cashflow without awkward follow-ups.</p>
-        <div class="hero-actions">
-          <a class="btn primary" href="login.html">Create account</a>
-          <a class="btn" href="features.html">See features</a>
+
+  <main>
+    <section class="hero">
+      <div class="shell hero-grid">
+        <div>
+          <p class="eyebrow">Built for Nigerian sellers, schools, suppliers, agents, and service businesses</p>
+          <h1>Stop chasing balances blindly.</h1>
+          <p class="lead">PayFollow turns credit sales, unpaid invoices, part payments, and WhatsApp follow-up into one clean payment desk your team can actually use.</p>
+          <div class="hero-actions">
+            <a class="btn btn-mint" href="login.html">Start tracking balances</a>
+            <a class="btn btn-light" href="features.html">See how it works</a>
+          </div>
+          <div class="trust-strip">
+            <span class="chip">Operated by Dynamic Fix LLC</span>
+            <span class="chip">WhatsApp-ready reminders</span>
+            <span class="chip">Mobile-first for Nigerian SMEs</span>
+          </div>
+        </div>
+
+        <div class="product-board" aria-label="PayFollow dashboard preview">
+          <div class="board-top">
+            <p class="board-title">Ada's Fashion House</p>
+            <span class="status-pill">Follow-up desk live</span>
+          </div>
+          <div class="metric-grid">
+            <div class="metric"><span>Total unpaid</span><strong>NGN 420k</strong></div>
+            <div class="metric"><span>Overdue</span><strong>NGN 118k</strong></div>
+            <div class="metric"><span>Due today</span><strong>7</strong></div>
+            <div class="metric"><span>Paid this week</span><strong>NGN 96k</strong></div>
+          </div>
+          <div class="mini-card">
+            <span class="label">Next best follow-up</span>
+            <p><strong>Send firm reminder to Chika Stores.</strong><br />Last promise was Friday. Part-payment tone recommended.</p>
+          </div>
+          <div class="timeline">
+            <div class="timeline-row"><span class="dot"></span><span>Reminder copied to WhatsApp</span><strong>9:12</strong></div>
+            <div class="timeline-row"><span class="dot"></span><span>NGN 35k part-payment logged</span><strong>11:40</strong></div>
+            <div class="timeline-row"><span class="dot"></span><span>Balance report ready for owner</span><strong>Now</strong></div>
+          </div>
         </div>
       </div>
-      <div class="hero-strip">
-        <div class="hero-stat">
-          <strong>NGN 420k</strong>
-          <span>Unpaid balances tracked clearly from the business dashboard.</span>
+    </section>
+
+    <section class="section">
+      <div class="shell split">
+        <div class="section-head">
+          <span class="section-kicker">Why PayFollow exists</span>
+          <h2>Nigerian businesses lose money in memory, notebooks, and scattered chats.</h2>
+          <p>Most small teams already know who owes them. The problem is follow-up discipline: what was promised, what was paid, who should message today, and what the owner can trust at the end of the week.</p>
+          <div class="section-actions">
+            <a class="btn btn-primary" href="features.html">Explore features</a>
+            <a class="btn btn-ghost" href="app.html">View dashboard</a>
+          </div>
         </div>
-        <div class="hero-stat">
-          <strong>5 tones</strong>
-          <span>Polite, firm, final, part-payment, and thank-you reminders.</span>
-        </div>
-        <div class="hero-stat">
-          <strong>1 link</strong>
-          <span>Copy a message or open WhatsApp directly from a customer record.</span>
+        <div class="ledger-panel">
+          <div class="ledger-row"><strong>Chika Stores</strong><span>Balance later customer</span><span class="badge danger">Overdue</span></div>
+          <div class="ledger-row"><strong>Mrs. Bello</strong><span>School fees plan</span><span class="badge warn">Due today</span></div>
+          <div class="ledger-row"><strong>Prime Logistics</strong><span>Part-payment received</span><span class="badge good">Recovering</span></div>
+          <div class="ledger-row"><strong>Ola Tailoring</strong><span>Thank-you reminder</span><span class="badge good">Closed</span></div>
         </div>
       </div>
-    </div>
-  </section>
-  <section class="site-section">
-    <div class="section-inner section-head">
-      <p class="eyebrow">Built for everyday sellers</p>
-      <h2>From fashion sellers to tutors, PayFollow keeps balances organized before money disappears in chat.</h2>
-      <p>Use PayFollow as a customer balance tracker, credit sales tracker, WhatsApp reminder helper, and simple cashflow desk for a growing Nigerian SME. PayFollow NG is operated by Dynamic Fix LLC, a registered company in Nigeria.</p>
-    </div>
-    <div class="section-inner feature-grid">
-      <article class="feature">
-        <h3>Track who owes you</h3>
-        <p>Record customer names, phone numbers, items sold, amount owed, due dates, part payments, and overdue balances in one clean workspace.</p>
-      </article>
-      <article class="feature">
-        <h3>Follow up on WhatsApp</h3>
-        <p>Generate polite, firm, final, part-payment, and thank-you messages that are ready to copy or open directly in WhatsApp.</p>
-      </article>
-      <article class="feature">
-        <h3>Protect daily cashflow</h3>
-        <p>See what is unpaid, what is overdue, what is due today, and what your team should follow up before another sale gets forgotten.</p>
-      </article>
-    </div>
-  </section>
+    </section>
 
-  <section class="site-section">
-    <div class="section-inner section-head">
-      <p class="eyebrow">Who it helps</p>
-      <h2>A practical balance recovery tool for businesses that sell before full payment lands.</h2>
-      <p>PayFollow NG is useful for fashion sellers, food vendors, wholesalers, POS agents, logistics vendors, tutors, schools, freelancers, salons, and small service businesses.</p>
-    </div>
-    <div class="section-inner feature-grid">
-      <article class="feature">
-        <h3>Credit sales tracking</h3>
-        <p>Keep a clear record of every "balance later" customer so your business is not depending on memory, notebooks, or scattered chats.</p>
-      </article>
-      <article class="feature">
-        <h3>Team follow-up</h3>
-        <p>Prepare staff access and invite messages so sales assistants can help follow up without losing customer context.</p>
-      </article>
-      <article class="feature">
-        <h3>Reports and exports</h3>
-        <p>Download simple cashflow reports and CSV balance lists for daily review, owner updates, or business planning.</p>
-      </article>
-    </div>
-  </section>
+    <section class="section band">
+      <div class="shell">
+        <div class="section-head">
+          <span class="section-kicker">What it controls</span>
+          <h2>One desk for balances, reminders, staff, and reports.</h2>
+          <p>PayFollow is not a random reminder generator. It is a payment follow-up workflow for real businesses that sell before the full money lands.</p>
+        </div>
+        <div class="grid-3">
+          <article class="card"><div class="icon-box">NGN</div><h3>Balance records</h3><p>Track customer, item, amount owed, due date, proof, part-payments, and outstanding balance.</p></article>
+          <article class="card"><div class="icon-box">WA</div><h3>WhatsApp-ready reminders</h3><p>Generate polite, firm, final, part-payment, and thank-you messages your team can copy or open in WhatsApp.</p></article>
+          <article class="card"><div class="icon-box">PDF</div><h3>Reports and exports</h3><p>Give owners clear daily views: overdue, due today, paid this week, and CSV exports for review.</p></article>
+        </div>
+      </div>
+    </section>
 
+    <section class="section">
+      <div class="shell">
+        <div class="section-head">
+          <span class="section-kicker">Built for everyday sellers</span>
+          <h2>Useful for the people already selling on credit today.</h2>
+          <p>Fashion sellers, food vendors, wholesalers, POS agents, schools, tutors, logistics vendors, salons, freelancers, and small service businesses can use PayFollow without changing how their customers already communicate.</p>
+        </div>
+        <div class="grid-3">
+          <article class="card"><h3>Owner control</h3><p>See the state of cashflow without asking staff for scattered chat screenshots.</p></article>
+          <article class="card"><h3>Staff follow-up</h3><p>Prepare staff access so assistants can follow up without losing the customer context.</p></article>
+          <article class="card"><h3>Customer relationship</h3><p>Keep follow-up professional, documented, and less awkward than repeated personal chasing.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-tight">
+      <div class="shell contact-panel">
+        <div>
+          <span class="section-kicker">Start clean</span>
+          <h2>Bring order to unpaid balances before another sale gets forgotten.</h2>
+          <p class="lead" style="color: var(--muted)">Create a workspace, add customers, and start tracking the money that should come back.</p>
+        </div>
+        <div class="card">
+          <h3>What happens next</h3>
+          <ul class="list">
+            <li>Create your PayFollow account</li>
+            <li>Add your business profile and WhatsApp number</li>
+            <li>Record your first customer balance</li>
+            <li>Copy a reminder or open WhatsApp from the record</li>
+          </ul>
+          <div class="section-actions">
+            <a class="btn btn-primary" href="login.html">Create account</a>
+            <a class="btn btn-ghost" href="contact.html">Talk to us</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="shell footer-grid">
+      <div><strong>PayFollow NG</strong><p>Customer balance tracking and WhatsApp follow-up for Nigerian SMEs. Operated by Dynamic Fix LLC.</p></div>
+      <div><strong>Product</strong><a href="features.html">Features</a><a href="pricing.html">Pricing</a><a href="app.html">Dashboard</a></div>
+      <div><strong>Company</strong><a href="faq.html">FAQ</a><a href="contact.html">Contact</a></div>
+      <div><strong>Access</strong><a href="login.html">Login</a><a href="login.html">Create account</a></div>
+    </div>
+  </footer>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
 
